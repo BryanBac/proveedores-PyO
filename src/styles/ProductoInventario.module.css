@@ -1,0 +1,155 @@
+.agregarImagen {
+  align-items: center;
+  background-color: #f3f1eb;
+  display: flex;
+  flex-direction: column;
+  height: 360px;
+  justify-content: space-around;
+  padding: 30px 30px 30px 80px;
+  position: relative;
+  width: 370px;
+}
+
+.agregarImagen::before {
+  background-color: #fffec4;
+  content: "";
+  height: 100%;
+  left: 0px;
+  position: absolute;
+  top: 0px;
+  width: 50px;
+}
+
+.agregarImagen:hover {
+  box-shadow: 10px 10px lightblue;
+  color: red;
+  cursor: pointer;
+}
+.body {
+  padding: 50px;
+}
+
+.boton {
+  align-items: center;
+  background-color: #fffec4;
+  border: none;
+  display: flex;
+  font-size: 32px;
+  height: 60px;
+  justify-content: center;
+  margin-top: 45px;
+  width: 480px;
+}
+
+.boton:hover {
+  color: red;
+  box-shadow: 10px 10px lightblue;
+  cursor: pointer;
+}
+
+.boton:active {
+  background-color: #faf084;
+}
+
+.container {
+  column-gap: 150px;
+  display: grid;
+  grid-template-columns: 480px 590px;
+  grid-template-rows: auto;
+  justify-content: center;
+  margin-top: 50px;
+}
+
+.celda {
+  background-color: white;
+  border: 1px solid #5b5b5b;
+  width: 180px;
+}
+
+.celdaEditable {
+  background-color: #ffffff00;
+  border: none;
+  font-size: 32px;
+  height: 60px;
+  text-align: center;
+  width: 97%;
+}
+
+.icono {
+  height: 90%;
+  max-width: 100%;
+  width: auto;
+}
+
+.imagen {
+  height: auto;
+  width: 100%;
+}
+
+.ingreso {
+  align-items: center;
+  display: flex;
+  font-size: 32px;
+  justify-content: space-between;
+  margin-top: 15px;
+}
+
+.input {
+  background-color: #f3f1eb;
+  border: none;
+  font-size: 32px;
+  height: 51px;
+  width: 300px;
+}
+
+.slide {
+  background-color: #f3f1eb;
+  height: 190px;
+  position: relative;
+  width: 150px;
+}
+
+.slide .boton {
+  width: 100%;
+  height: 100%;
+  margin-top: 0px;
+  background-color: #f3f1eb;
+  font-size: 16px;
+}
+
+.slide .boton:active {
+  background-color: #d6d3cf;
+}
+
+.tabla {
+  background-color: #f3f1eb;
+  border-spacing: 0px;
+  font-size: 32px;
+  margin-top: 50px;
+  padding: 10px;
+  width: 590px;
+}
+
+.texto {
+  background-color: #fffec4;
+  bottom: 0%;
+  display: flex;
+  justify-content: center;
+  left: 0%;
+  position: absolute;
+  width: 100%;
+}
+@media screen and (max-width: 768px) and (orientation: portrait) {
+  .tabla {
+    width: 300px;
+  }
+  .container{
+    display: block;
+  }
+  .agregarImagen{
+    width: 250px;
+  }
+  .imagen {
+    width: 70%;
+  }
+}

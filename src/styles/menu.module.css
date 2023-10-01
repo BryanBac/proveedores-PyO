@@ -1,0 +1,54 @@
+.body {
+  background-color: white;
+  padding: 20px;
+}
+
+.boton {
+  background-color: #f3f1eb;
+  border-width: 0px 0px 3px 0px;
+  height: 100%;
+  position: relative;
+  width: 100%;
+}
+
+.boton:hover {
+  color: red;
+  box-shadow: 10px 10px lightblue;
+  cursor: pointer;
+}
+
+.imagen {
+  height: auto;
+  margin-top: -60px;
+  width: 50%;
+}
+
+.menu {
+  column-gap: 110px;
+  display: grid;
+  grid-template-columns: 370px 370px;
+  grid-template-rows: 270px 270px;
+  justify-content: center;
+  row-gap: 75px;
+}
+
+.texto {
+  background-color: #fffec4;
+  bottom: 0%;
+  font-size: 36px;
+  left: 0%;
+  position: absolute;
+  width: 100%;
+}
+@media screen and (max-width: 768px) and (orientation: portrait) {
+  .menu{
+      display: block;
+  }
+  .boton{
+    margin-top: 35px;
+    height: 200px;
+  }
+  .imagen {
+    width: 120px;
+  }
+}

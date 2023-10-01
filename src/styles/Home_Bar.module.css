@@ -1,0 +1,44 @@
+.inicio{
+    width: 90%;
+    display: grid;
+    grid-template-columns: 10% 10% 80%;
+    margin: 20px 25px 0 15px;
+}
+.derecha{
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 5%;
+}
+.flex{
+    display: flex;
+    justify-content: right;
+}
+.boton {
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+}
+.boton2 {
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    text-decoration: none;
+    margin-left: 30px;
+}
+.boton:hover{
+    color: red;
+}
+.letras{
+    margin-left: 10px;
+}
+@media screen and (max-width: 768px) and (orientation: portrait) {
+    .inicio{
+        grid-template-columns: 18% 10% 73%;
+    }
+}

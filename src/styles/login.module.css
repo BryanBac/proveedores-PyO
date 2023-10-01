@@ -1,0 +1,55 @@
+  .body {
+    padding: 50px;
+  }
+  .boton {
+    align-items: center;
+    background-color: #fffec4;
+    border: none;
+    display: flex;
+    font-size: 32px;
+    height: 60px;
+    justify-content: center;
+    margin-top: 45px;
+    width: 480px;
+  }
+  
+  .boton:hover {
+    color: red;
+    box-shadow: 10px 10px lightblue;
+    cursor: pointer;
+  }
+  
+  .boton:active {
+    background-color: #faf084;
+  }
+  
+  .container {
+    display: grid;
+    justify-content: center;
+    margin-top: 50px;
+    justify-items: center;
+  }
+  
+  .ingreso {
+    align-items: center;
+    display: flex;
+    font-size: 32px;
+    width: 500px;
+    justify-content:flex-end;
+    margin-top: 15px;
+  }
+  
+  .input {
+    background-color: #f3f1eb;
+    border: none;
+    font-size: 32px;
+    height: 51px;
+    width: 300px;
+    margin-left: 20px;
+  }
+  .error{
+    margin-top: 25px;
+    font-size: 28px;
+    color: red;
+    font-style: italic;
+}

@@ -1,0 +1,100 @@
+.body {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  padding: 0px 50px 0px 50px;
+}
+
+.boton {
+  background-color: #fffec4;
+  border: none;
+  font-size: 32px;
+  height: 60px;
+  margin-top: 45px;
+  width: 285px;
+}
+
+.boton:hover {
+  color: red;
+  box-shadow: 10px 10px lightblue;
+  cursor: pointer;
+}
+
+.boton:active {
+  background-color: #faf084;
+}
+
+.celda {
+  background-color: white;
+  border: 1px solid #5b5b5b;
+}
+
+.celda .boton {
+  width: 100%;
+  height: 20px;
+  margin-top: 0px;
+  background-color: #e4ddd4;
+  border-radius: 50%;
+  font-size: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.celdaEditable {
+  border: none;
+  font-size: 16px;
+  text-align: center;
+  width: 100%;
+}
+
+.encabezado {
+  background-color: #fffec4;
+}
+
+.encabezado,
+.celda {
+  border: 1px solid #5b5b5b;
+  padding: 15px;
+}
+
+.modal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  row-gap: 20px;
+  font-size: 20px;
+}
+
+.modal .boton {
+  font-size: 16px;
+  height: auto;
+  width: 150px;
+  margin-top: 0px;
+  padding: 10px;
+}
+
+.tabla {
+  background-color: #f3f1eb;
+  border-spacing: 0px;
+  margin-top: 30px;
+  padding: 25px;
+  width: 1080px;
+}
+.aux{
+  width: 100%;
+}
+
+@media screen and (max-width: 768px) and (orientation: portrait) {
+  .body {
+    width: 100%;
+    justify-content: center;
+  }
+  .aux{
+    display: block;
+    width: 800px;
+  }
+  .tabla {
+    width: 700px;
+  }
+}

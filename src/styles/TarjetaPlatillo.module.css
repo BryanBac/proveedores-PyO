@@ -1,0 +1,41 @@
+.alinear{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50%;
+}
+
+.superContainer{
+    width: 60%;
+    height: 80%;
+}
+.primero{
+    width: 100%;
+    background-color: #e9e8e6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.segundo{
+    width: 100%;
+    background-color: #FFFEC4;
+    display: flex;
+    justify-content: space-around;
+}
+.imagen{
+    height: 120px;
+    width: 120px;
+}
+.barra{
+    margin-top: 3px;
+    display: grid;
+    grid-template-columns: 40% 20% 40%;
+}
+.botonContainer{
+    display: flex;
+    justify-content: center;
+}
+.centrado {
+    text-align: center;
+  }

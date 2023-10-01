@@ -1,0 +1,16 @@
+.cerrar {
+    background-color: red;
+    color: white;
+    font-size: large;
+}
+
+.scroller{
+    padding-top: 2%;
+    overflow-y: scroll;
+    height: 240px;
+    width: 100%;
+}
+
+.itemScroller {
+    margin: 10px 0;
+}

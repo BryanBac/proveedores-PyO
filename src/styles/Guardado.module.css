@@ -1,0 +1,10 @@
+.titulos{
+    display: flex;
+    width: 100%;
+    background-color: #f8f699;
+    height: 50px;
+    justify-content: center;
+    align-items: center;
+    font-size: larger;
+    margin: 15px 0;
+}

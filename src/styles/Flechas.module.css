@@ -1,0 +1,16 @@
+.flechas {
+    display: flex;
+    align-items: center;
+    height: 85vh;
+}
+
+.boton {
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+}
+
+.colorFlechita:hover{
+    color: red;
+}

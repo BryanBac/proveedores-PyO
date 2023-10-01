@@ -1,0 +1,21 @@
+.inicio{
+    display: block;
+}
+.contenido{
+    display: flex;
+    margin: 1% 15px;
+}
+.tarjetas{
+    display: grid;
+    margin: 35px 15px 5px 30px;
+    grid-template-columns: 30% 30% 30%;
+    column-gap: 5%;
+    row-gap: 10%;
+    width: 100%;
+    height: 100%;
+    transition: box-shadow 0.3s ease;
+}
+.flechas{
+    display: flex;
+    align-items: center;
+}
