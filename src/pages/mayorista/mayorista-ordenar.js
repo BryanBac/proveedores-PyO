@@ -11,58 +11,46 @@ import { useRouter } from 'next/router'
 
 function eliminarDuplicados(lista) {
     const listaSinDuplicados = [];
-  
-    for (let i = 0; i < lista.length; i++) {
-      let duplicado = false;
-  
-      for (let j = 0; j < listaSinDuplicados.length; j++) {
-        if (lista[i].nombre === listaSinDuplicados[j].nombre) {
-          duplicado = true;
-          break;
-        }
-      }
-  
-      if (!duplicado) {
-        listaSinDuplicados.push(lista[i]);
-      }
-    }
-  
-    return listaSinDuplicados;
-  }
 
-export default function PedidosGranizadas() {
+    for (let i = 0; i < lista.length; i++) {
+        let duplicado = false;
+
+        for (let j = 0; j < listaSinDuplicados.length; j++) {
+            if (lista[i].nombre === listaSinDuplicados[j].nombre) {
+                duplicado = true;
+                break;
+            }
+        }
+
+        if (!duplicado) {
+            listaSinDuplicados.push(lista[i]);
+        }
+    }
+
+    return listaSinDuplicados;
+}
+
+export default function Pedidos() {
     const router = useRouter()
     const [total, setTotal] = useState(0)
     const [tamL, setTamL] = useState(0)
     const [actualizar, setActualizar] = useState(false)
     const itemsPerPage = 4; // Number of items to display per page
 
-    const nombresAAgregar = [
-        "Granizada 1 Ingrediente",
-        "Granizada 2 Ingredientes",
-        "Granizada 3 Ingredientes",
-        "Granizada 4 Ingredientes",
-        "Granizada Mango Limon",
-        "Extra"
-    ];
-
     const [list, setList] = useState(() => {
         if (typeof window !== 'undefined' && window.sessionStorage) {
-            const storedList = sessionStorage.getItem('platilloListGranizadas');
+            const storedList = sessionStorage.getItem('platilloList');
             let listaPreOrden = JSON.parse(storedList)
-            const listaFiltrada = listaPreOrden.filter((objeto) => nombresAAgregar.includes(objeto.nombre));
-            // console.log("Así entra list", listaFiltrada)
-            return listaFiltrada
+            return listaPreOrden
         } else {
             return []
         }
     });
-
     const [listOrden, setListOrden] = useState(() => {
         if (typeof window !== 'undefined' && window.sessionStorage) {
             const storedList = sessionStorage.getItem('ordenList');
-            console.log("Granizadas")
-            console.log("STDL",typeof storedList)
+            console.log("Ordenar")
+            console.log("STDL", typeof JSON.parse(storedList))
             let listaPreOrden = JSON.parse(storedList)
             return eliminarDuplicados(listaPreOrden)
         } else {
@@ -112,7 +100,8 @@ export default function PedidosGranizadas() {
         return false; // Indica que no se encontró el objeto
     }
     const setear = () => {
-        let orden = listOrden
+        let orden = listOrden;
+        console.log(listOrden)
         let contador = 1;
         for (let i = 0; i < list.length; i++) {
             if (list[i].cantidadLocal != 0) {
@@ -129,7 +118,7 @@ export default function PedidosGranizadas() {
                     orden.push(objeto)
                 }
                 contador += 1
-            }else{
+            } else{
                 const objeto = {
                     id: contador,
                     imagen: list[i].imagen,
@@ -143,7 +132,9 @@ export default function PedidosGranizadas() {
                 contador += 1
             }
         }
+
         sessionStorage.setItem('ordenList', JSON.stringify(orden));
+        sessionStorage.setItem('platilloList', JSON.stringify(list));
         if (orden.length == 0) {
             alert('No se han ingresado productos')
         }
@@ -153,6 +144,7 @@ export default function PedidosGranizadas() {
     }
     const setear2 = () => {
         let orden = listOrden;
+        console.log("LOrden", listOrden)
         let contador = 1;
         let nuevaO= []
         for (let i = 0; i < list.length; i++) {
@@ -169,7 +161,8 @@ export default function PedidosGranizadas() {
                 if (!modificarCantidadLocal(orden, list[i].nombre, list[i].cantidadLocal)) {
                     orden.push(objeto)
                 }
-            }else{
+                contador += 1
+            } else{
                 const objeto = {
                     id: contador,
                     imagen: list[i].imagen,
@@ -183,14 +176,9 @@ export default function PedidosGranizadas() {
                 contador += 1
             }
         }
-        for(let j=0; j<orden.length;j++){
-            if(orden[j].cantidadLocal!=0){
-                nuevaO.push(orden[j])
-            }
-        }
-        console.log("LOrden", typeof nuevaO)
-        sessionStorage.setItem('ordenList', JSON.stringify(nuevaO));
-        router.push("/ordenar")
+        console.log("orden", typeof orden)
+        sessionStorage.setItem('ordenList', JSON.stringify(orden));
+        router.push("/ordenarGranizadas")
     }
     useEffect(() => {
         if (list) {
@@ -199,6 +187,7 @@ export default function PedidosGranizadas() {
             }
         }
     }, [list])
+
     return (
         <>
             <Head>
@@ -219,9 +208,6 @@ export default function PedidosGranizadas() {
                                 <div className={styles.cajaTotales}>{total}</div>
                             </div>
                         </div>
-                        <div className={styles.centrarHorizontal}><button className={styles.boton2} onClick={() => {
-                            setear2()
-                        }}>Menu</button></div>
                         <div className={styles.tarjetas}>
                             {currentItems.map((item) => {
                                 return (<Platillo setListOrden={setListOrden} listO={listOrden} data={item} key={item.id} list={list} setList={setList} setActualizar={setActualizar}></Platillo>)

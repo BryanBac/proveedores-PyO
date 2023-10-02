@@ -189,11 +189,6 @@ export default function Financiera() {
                         </div>
                     </div>
                 </div>
-                <div className={styles.empanadaContainer}>
-                    <div className={styles.empanada}>
-                        <TablaEmpanada masaAyer={masaAyer} empanadasAyer={empanadasAyer} empanada={empanada} empanadasProducidas={empanadasProducidas}></TablaEmpanada>
-                    </div>
-                </div>
             </div>
 
         </>
