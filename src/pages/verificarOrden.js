@@ -83,7 +83,7 @@ function eliminarDuplicados(lista) {
     return listaSinDuplicados;
 }
 function filtrarPorCantidadLocal(objetos) {
-  return objetos.filter(objeto => objeto.cantidadLocal > 0);
+    return objetos.filter(objeto => objeto.cantidadLocal > 0);
 }
 
 export default function VerificarOrden() {
@@ -166,14 +166,16 @@ export default function VerificarOrden() {
                 const updatedNuevaSet = [];
                 const updateIngredientes = []
                 for (let i = 0; i < list.length; i++) {
-                    list[i].ingredientes.forEach((ltItem) => {
-                        const material = materiales.find((mat) => mat.id === ltItem.id);
-                        if (material) {
-                            updatedNuevaSet.push(material);
-                            ltItem.cantidad = ltItem.cantidad * list[i].cantidadLocal
-                            updateIngredientes.push(ltItem)
-                        }
-                    });
+                    if (list[i].ingredientes > 0) {
+                        list[i].ingredientes.forEach((ltItem) => {
+                            const material = materiales.find((mat) => mat.id === ltItem.id);
+                            if (material) {
+                                updatedNuevaSet.push(material);
+                                ltItem.cantidad = ltItem.cantidad * list[i].cantidadLocal
+                                updateIngredientes.push(ltItem)
+                            }
+                        });
+                    }
                 }
                 setLoading(false)
                 serCurrentIngredientes(sumAndMergeDuplicates(updateIngredientes));
@@ -268,8 +270,8 @@ export default function VerificarOrden() {
     }, [mod])
 
 
-    useEffect(()=>{
-        if(contador.length>0){
+    useEffect(() => {
+        if (contador.length > 0) {
             modificarMateriales();
         }
     }, [contador])
