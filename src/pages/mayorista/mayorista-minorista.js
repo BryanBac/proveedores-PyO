@@ -9,8 +9,6 @@ import modificarDocumento from '../api/firebase/update-data'
 import eliminarDocumento from '../api/firebase/delete-data'
 import Loader from '@/components/loader'
 import InactivityAlert2 from '@/components/InactivityEmployee'
-import ModalPopUp from '@/components/popup/popup'
-import ModalPedidoFinanciero from '@/components/popup/modalPedidoFinanciero'
 import { useRouter } from 'next/router'
 
 export default function Home() {
@@ -19,18 +17,10 @@ export default function Home() {
     const [fechaFirebase, setFechaFirebase] = useState([])
     const [pedidos, setPedidos] = useState([])
     const [contador, setContador] = useState([])
-    const [openPopUp, setOpenPopUp] = useState(false);
-    const [dataPresionada, setDataPresionada] = useState([])
     const [loading, setLoading] = useState(true);
-    const [dataProductos, setDataProductos] = useState([])
-    const [finanza, setFinanza] = useState([])
-    const [total, setTotal] = useState(0)
-    const [presionado, setPresionado] = useState(false)
     const [restaurar, setRestaurar] = useState([])
     const [eliminarRestaurar, setEliminarRestaurar] = useState(false)
     const [eliminarPedidos, setEliminarPedidos] = useState(false)
-    const [fechaHoy, setFechaHoy] = useState("")
-    const [empCant, setEmpCant] = useState(0)
     const router = useRouter()
     useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -52,14 +42,6 @@ export default function Home() {
             console.error("Error fetching data:", error);
         }
     };
-    const fetchFinanza = async () => {
-        try {
-            const result = await obtener("finanza");
-            setFinanza(result);
-        } catch (error) {
-            console.error("Error fetching data:", error);
-        }
-    };
     const fetchFecha = async () => {
         try {
             const result = await obtener("fecha");
@@ -71,7 +53,7 @@ export default function Home() {
     };
     const fetchContador = async () => {
         try {
-            const result = await obtener("contador");
+            const result = await obtener("contadorMayorista");
             setContador(result);
         } catch (error) {
             // Handle the error if needed
@@ -80,7 +62,7 @@ export default function Home() {
     };
     const fetchPedidos = async () => {
         try {
-            const result = await obtener("pedidos");
+            const result = await obtener("pedidosMayorista");
             setPedidos(result);
         } catch (error) {
             // Handle the error if needed
@@ -89,7 +71,7 @@ export default function Home() {
     };
     const fetchRestaurar = async () => {
         try {
-            const result = await obtener("restaurar");
+            const result = await obtener("restaurarMayorista");
             setRestaurar(result);
         } catch (error) {
             // Handle the error if needed
@@ -116,38 +98,7 @@ export default function Home() {
             }
         }
         fetchData();
-        fetchFinanza();
     }, []);
-    const filtrarPedidosPorFecha = () => {
-        const currentDate = new Date();
-        const formattedDate = currentDate.toLocaleDateString('es-ES', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-        });
-        setFechaHoy(formattedDate)
-        const pedidosFiltrados = finanza.filter(pedido => pedido.fecha === formattedDate);
-        let listaOrdenada = pedidosFiltrados.sort((a, b) => b.contador - a.contador);
-        setDataProductos(listaOrdenada);
-    };
-
-    useEffect(() => {
-        if (finanza.length > 0) {
-            filtrarPedidosPorFecha()
-        }
-    }, [finanza])
-
-    useEffect(() => {
-        if (dataProductos.length > 0) {
-            let st = 0
-            for (let i = 0; i < dataProductos.length; i++) {
-                st = st + dataProductos[i].total;
-            }
-            setTotal(st)
-        } else {
-            setTotal(0)
-        }
-    }, [dataProductos])
     useEffect(() => {
         if (fechaFirebase.length > 0) {
             const currentDate = new Date();
@@ -174,7 +125,6 @@ export default function Home() {
             }
         }
         if (eliminarPedidos) {
-            let empanadasCantidad = 0;
             if (pedidos.length > 0) {
                 for (let i = 0; i < pedidos.length; i++) {
                     const data = {
@@ -199,7 +149,6 @@ export default function Home() {
                 }
                 // setEliminarPedidos(false)
             }
-            setEmpCant(empanadasCantidad)
         }
     }, [eliminarRestaurar, eliminarPedidos, restaurar, pedidos])
     const setear = () => {
@@ -225,20 +174,14 @@ export default function Home() {
             </Head>
             {loading == true && <Loader></Loader>}
             <div>
-                <ModalPopUp
-                    openPopUp={openPopUp}
-                    setOpenPopUp={setOpenPopUp}
-                >
-                    <ModalPedidoFinanciero data={dataPresionada} tipo={true} presionado={presionado} setPresionado={setPresionado}></ModalPedidoFinanciero>
-                </ModalPopUp>
                 <InactivityAlert2 />
                 <HomeBar enlace="mayorista-inicio"></HomeBar>
                 <div className={styles.container}>
-                    <Link className={styles.panel} href="mayorista-ordenar" onClick={() => setear()}>
+                    <Link className={styles.panel} href="mayorista-minorista-ordenar" onClick={() => setear()}>
                         <div className={styles.primero}><img src="../list.png" className={styles.imagen} alt="/imagen no encontrada"></img></div>
                         <div className={styles.segundo}> <div className={styles.sin}>Vender</div> </div>
                     </Link>
-                    <Link className={styles.panel} href="mayorista-pedidosEmpleados">
+                    <Link className={styles.panel} href="mayorista-minorista-pedidosEmpleados">
                         <div className={styles.primero}><img src="../clock.png" className={styles.imagen} alt="/imagen no encontrada"></img></div>
                         <div className={styles.segundo}><div className={styles.sin}>Pedidos de minorista</div> </div>
                     </Link>

@@ -29,7 +29,7 @@ export default function Pedidos() {
     // Así es como obtendo data
     const fetchData = async () => {
         try {
-            const result = await obtener("pedidos");
+            const result = await obtener("pedidosMayorista");
             let listaOrdenada = result.sort((a, b) => a.contador - b.contador);
             setData(listaOrdenada);
         } catch (error) {
@@ -91,7 +91,7 @@ export default function Pedidos() {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <div className={styles.inicio}>
-                <HomeBar enlace="/inicio"></HomeBar>
+                <HomeBar enlace="mayorista-minorista"></HomeBar>
                 <ColorIdentifier></ColorIdentifier>
                 <div className={styles.contenido}>
                     <ArrowBack currentPage={currentPage} setCurrentPage={setCurrentPage}></ArrowBack>

@@ -137,6 +137,7 @@ export default function ModalPedidoEmpleado(props) {
                 setMensaje(true)
             } else {
                 setExiste(false)
+                setMensaje2(false)
             }
         } else if (dtfB) {
             setExiste(false)

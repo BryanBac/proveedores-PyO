@@ -139,46 +139,8 @@ export default function Pedidos() {
             alert('No se han ingresado productos')
         }
         else {
-            router.push("/verificarOrden")
+            router.push("mayorista-minorista-verificarOrden")
         }
-    }
-    const setear2 = () => {
-        let orden = listOrden;
-        console.log("LOrden", listOrden)
-        let contador = 1;
-        let nuevaO= []
-        for (let i = 0; i < list.length; i++) {
-            if (list[i].cantidadLocal != 0) {
-                const objeto = {
-                    id: contador,
-                    imagen: list[i].imagen,
-                    precio: list[i].precio,
-                    cantidadLocal: list[i].cantidadLocal,
-                    nombre: list[i].nombre,
-                    ingredientes: list[i].ingredientes,
-                    contador: list[i].contador
-                }
-                if (!modificarCantidadLocal(orden, list[i].nombre, list[i].cantidadLocal)) {
-                    orden.push(objeto)
-                }
-                contador += 1
-            } else{
-                const objeto = {
-                    id: contador,
-                    imagen: list[i].imagen,
-                    precio: list[i].precio,
-                    cantidadLocal: list[i].cantidadLocal,
-                    nombre: list[i].nombre,
-                    ingredientes: list[i].ingredientes,
-                    contador: list[i].contador
-                }
-                orden.push(objeto)
-                contador += 1
-            }
-        }
-        console.log("orden", typeof orden)
-        sessionStorage.setItem('ordenList', JSON.stringify(orden));
-        router.push("/ordenarGranizadas")
     }
     useEffect(() => {
         if (list) {
@@ -197,7 +159,7 @@ export default function Pedidos() {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <div className={styles.inicio}>
-                <HomeBar enlace="/inicio"></HomeBar>
+                <HomeBar enlace="mayorista-minorista"></HomeBar>
                 <InactivityAlert2 />
                 <div className={styles.contenido}>
                     <ArrowBack currentPage={currentPage} setCurrentPage={setCurrentPage}></ArrowBack>
