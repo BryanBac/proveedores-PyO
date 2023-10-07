@@ -1,4 +1,3 @@
-import HomeBar from "@/components/home_bar"
 import styles from '@/styles/Profile.module.css'
 import Head from 'next/head'
 import { useEffect, useState } from "react"
@@ -7,7 +6,7 @@ import ModalPopUp from "@/components/popup/popup"
 import ModalCrearUser from "@/components/popup/modalCrearUser"
 import { useRouter } from "next/router"
 
-export default function Profile() {
+const Profile = () => {
     const [nombre, setNombre] = useState("")
     const [openPopUp, setOpenPopUp] = useState(false)
     const [actualizar, setActualizar] = useState(false)
@@ -40,7 +39,6 @@ export default function Profile() {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <div>
-                <HomeBar enlace="/menu"></HomeBar>
                 <ModalPopUp
                     openPopUp={openPopUp}
                     setOpenPopUp={setOpenPopUp}
@@ -72,3 +70,5 @@ export default function Profile() {
         </>
     )
 }
+
+export default Profile

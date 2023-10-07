@@ -1,6 +1,5 @@
 import Head from 'next/head'
 import styles from '@/styles/Pedidos.module.css'
-import HomeBar from '@/components/home_bar'
 import { dataPedidos } from '@/components/mock_tarjetas'
 import Pedido from '@/components/tarjeta_orden'
 import { useEffect, useState } from 'react'
@@ -20,7 +19,7 @@ const obtenerFechaFormateada = () => {
     return `${dia}/${mes}/${anio}`;
 };
 
-export default function Pedidos() {
+const PedidosFinanza = () => {
     const router = useRouter()
 
     useEffect(() => {
@@ -121,7 +120,6 @@ export default function Pedidos() {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <div className={styles.inicio}>
-                <HomeBar enlace="pedidosMenu"></HomeBar>
                 <ColorIdentifier></ColorIdentifier>
                 <div className={styles.contenido}>
                     <ArrowBack currentPage={currentPage} setCurrentPage={setCurrentPage}></ArrowBack>
@@ -152,3 +150,5 @@ export default function Pedidos() {
         </>
     )
 }
+
+export default PedidosFinanza

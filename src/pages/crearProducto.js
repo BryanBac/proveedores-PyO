@@ -3,7 +3,6 @@ import { register } from "swiper/element/bundle";
 import { useEffect, useRef, useState } from "react";
 import Head from "next/head";
 import Image from "next/image";
-import HomeBar from "@/components/home_bar";
 import styles from "../styles/ProductoInventario.module.css";
 import styleDatos from "../styles/inventario.module.css";
 const InterFont = Inter({ subsets: ["latin"] });
@@ -17,7 +16,7 @@ import InactivityAlert from "@/components/Inactivity";
 
 register();
 
-export default function Home() {
+const CrearProducto = () => {
     const router = useRouter();
     const [cont, setCont] = useState(0);
     const [momentaneo, setMomentaneo] = useState()
@@ -221,7 +220,6 @@ export default function Home() {
             <Head>
                 <title>Crear Producto</title>
             </Head>
-            <HomeBar enlace="productos"></HomeBar>
             <InactivityAlert />
             <div class={styles.body}>
                 <swiper-container ref={swiperRef} init="false">
@@ -336,3 +334,5 @@ export default function Home() {
         </div>
     );
 }
+
+export default CrearProducto

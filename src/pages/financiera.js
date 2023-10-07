@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/router";
 import obtener from "./api/firebase/get-data"
-import HomeBar from '@/components/home_bar'
 import styles from '@/styles/Financiera.module.css'
 import Head from "next/head";
 import DateCalendarValue from "@/components/datePicker";
@@ -13,7 +12,7 @@ import eliminarDocumento from "./api/firebase/delete-data";
 import TablaOriginal from "@/components/tables/tablaOriginal";
 import InactivityAlert from "@/components/Inactivity";
 
-export default function Financiera() {
+const Financiera = () => {
     const [pedidos, setPedidos] = useState([])
     const [mesPedidos, setMesPedidos] = useState([])
     const [numEmpanadas, setNumEmpanadas] = useState([])
@@ -156,7 +155,6 @@ export default function Financiera() {
                 <title>Financiero</title>
             </Head>
             <div className={styles.inicio}>
-                <HomeBar enlace="/menu"></HomeBar>
                 <InactivityAlert />
                 <ModalPopUp
                     openPopUp={openPopUp}
@@ -199,3 +197,5 @@ export default function Financiera() {
         </>
     )
 }
+
+export default Financiera

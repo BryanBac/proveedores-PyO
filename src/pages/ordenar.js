@@ -1,13 +1,11 @@
-import Head from 'next/head'
 import styles from '@/styles/Ordenar.module.css'
-import HomeBar from '@/components/home_bar'
 import { useEffect, useState } from 'react'
 import ArrowBack from '@/components/arrow_back'
 import ArrowForward from '@/components/arrow_forward'
 import Platillo from '@/components/platillo'
-import Link from 'next/link'
 import InactivityAlert2 from '@/components/InactivityEmployee'
 import { useRouter } from 'next/router'
+import Head from 'next/head'
 
 function eliminarDuplicados(lista) {
     const listaSinDuplicados = [];
@@ -30,7 +28,7 @@ function eliminarDuplicados(lista) {
     return listaSinDuplicados;
 }
 
-export default function Pedidos() {
+const Ordenar = () => {
     const router = useRouter()
     const [total, setTotal] = useState(0)
     const [tamL, setTamL] = useState(0)
@@ -207,7 +205,6 @@ export default function Pedidos() {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <div className={styles.inicio}>
-                <HomeBar enlace="/inicio"></HomeBar>
                 <InactivityAlert2 />
                 <div className={styles.contenido}>
                     <ArrowBack currentPage={currentPage} setCurrentPage={setCurrentPage}></ArrowBack>
@@ -236,3 +233,5 @@ export default function Pedidos() {
         </>
     )
 }
+
+export default Ordenar

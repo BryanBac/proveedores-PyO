@@ -1,7 +1,6 @@
 import { Inter } from "next/font/google";
 import Head from "next/head";
 import styles from "../styles/VistaProductos.module.css";
-import HomeBar from "@/components/home_bar";
 import { useEffect, useState } from "react";
 import modificarDocumento from "./api/firebase/update-data";
 import obtener from "./api/firebase/get-data";
@@ -13,7 +12,7 @@ import Link from "next/link";
 import { storage } from "../../firebase";
 import { v4 } from "uuid";
 
-export default function Home() {
+const Productos = () => {
     const router = useRouter()
     useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -124,12 +123,8 @@ export default function Home() {
             <Head>
                 <title>Crear Producto</title>
             </Head>
-            <HomeBar enlace="menu"></HomeBar>
             <div class={styles.body}>
                 <div>
-                    <Link href={"/crearProducto"}>
-                        <button class={styles.boton}>Añadir Producto</button>
-                    </Link>
                     <table class={styles.tabla}>
                         <thead>
                             <tr>
@@ -218,3 +213,5 @@ export default function Home() {
         </div>
     );
 }
+
+export default Productos
