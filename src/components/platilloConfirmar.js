@@ -23,14 +23,14 @@ export default function PlatilloConfirmar(props) {
         <div className={styles.tarjeta}>
           <div className={styles.primero}><img className={styles.imagen} src={data.imagen} alt="/imagen no encontrada"></img></div>
           <div className={styles.segundo}>
-            <div>{data.nombre}</div>
-            <div>Q.{data.precio}</div>
+            <div>{data.nombre}:</div>
+            <div>Q{data.precio}</div>
           </div>
         </div>
         <div className={styles.barra}>
           <div className={styles.subTotal}>
             <div >Cantidad: {data.cantidadLocal}</div>
-            <div >SubTotal: {calcularSubTotal()}</div>
+            <div >SubTotal: Q{calcularSubTotal()}</div>
           </div>
         </div>
       </div>
