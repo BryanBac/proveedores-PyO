@@ -85,7 +85,7 @@ function filtrarPorCantidadLocal(objetos) {
 export default function VerificarOrden() {
     const itemsPerPage = 4; // Number of items to display per page
     const [total, setTotal] = useState(0);
-    const [efectivo, setEfectivo] = useState()
+    const [efectivo, setEfectivo] = useState("")
     const [vuelto, setVuelto] = useState(0)
     const [currentDateTime, setCurrentDateTime] = useState('');
     const [loading, setLoading] = useState(true);
@@ -240,7 +240,9 @@ export default function VerificarOrden() {
                 fecha: currentDateTime,
                 estado: estado,
                 hora: obtenerHoraActual(),
-                matActualizar: matActualizar
+                matActualizar: matActualizar,
+                mayorista:"",
+                minorista: efectivo
             }
             enviar("pedidosMayorista", pedidos)
             modificarDocumento(contador[0].id, "contadorMayorista", {
@@ -292,22 +294,9 @@ export default function VerificarOrden() {
                                 Total: <div className={styles.cajaTotales}>{total}</div>
                             </div>
                             <div className={styles.elementoTotales}>
-                                Efectivo: <input className={styles.cajaTotales} type="number" value={efectivo} onChange={(event) => {
-                                    let efec = Number(event.target.value);
-                                    if (efec != 0) {
-                                        setEfectivo(Number(event.target.value))
-                                        let v = Number(event.target.value) - total
-                                        setVuelto(v)
-                                    }
-                                    else {
-                                        setEfectivo()
-                                        setVuelto(0)
-                                    }
-
+                                Nombre de Minorista: <input className={styles.cajaTotales} type="text" value={efectivo} onChange={(event) => {
+                                   setEfectivo(event.target.value)
                                 }}></input>
-                            </div>
-                            <div className={styles.elementoTotales}>
-                                Vuelto: <div className={styles.cajaTotales}>{vuelto}</div>
                             </div>
                         </div>
                         <div className={styles.grilla}>

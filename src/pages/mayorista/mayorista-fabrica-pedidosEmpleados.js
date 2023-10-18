@@ -29,7 +29,7 @@ export default function Pedidos() {
     // Así es como obtendo data
     const fetchData = async () => {
         try {
-            const result = await obtener("pedidos");
+            const result = await obtener("pedidosFabrica");
             let listaOrdenada = result.sort((a, b) => a.contador - b.contador);
             setData(listaOrdenada);
         } catch (error) {
@@ -99,7 +99,7 @@ export default function Pedidos() {
                         openPopUp={openPopUp}
                         setOpenPopUp={setOpenPopUp}
                     >
-                        <ModalPedidoEmpleado recargar={recargar} setRecargar={setRecargar} data={dataPresionada} tipo={true} presionado={presionado} setPresionado={setPresionado}></ModalPedidoEmpleado>
+                        <ModalPedidoEmpleado estamosEn={"mayorista-fabrica"} recargar={recargar} setRecargar={setRecargar} data={dataPresionada} data2={dataPresionada} tipo={true} presionado={presionado} setPresionado={setPresionado} aceptar={true}></ModalPedidoEmpleado>
                     </ModalPopUp>
                     <InactivityAlert2 />
                     <div className={styles.tarjetas}>

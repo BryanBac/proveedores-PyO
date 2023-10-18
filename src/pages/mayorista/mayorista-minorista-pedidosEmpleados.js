@@ -99,7 +99,7 @@ export default function Pedidos() {
                         openPopUp={openPopUp}
                         setOpenPopUp={setOpenPopUp}
                     >
-                        <ModalPedidoEmpleado recargar={recargar} setRecargar={setRecargar} data={dataPresionada} tipo={true} presionado={presionado} setPresionado={setPresionado}></ModalPedidoEmpleado>
+                        <ModalPedidoEmpleado estamosEn={"mayorista-fabrica"} recargar={recargar} setRecargar={setRecargar} data={dataPresionada} data2={dataPresionada} tipo={true} presionado={presionado} setPresionado={setPresionado} aceptar={true}></ModalPedidoEmpleado>
                     </ModalPopUp>
                     <InactivityAlert2 />
                     <div className={styles.tarjetas}>

@@ -62,48 +62,58 @@ const obtenerFechaFormateada = () => {
 };
 
 export default function ModalPedidoEmpleado(props) {
-    const { openPopUp, setOpenPopUp, data, setPresionado, presionado, tipo, setRecargar } = props;
+    const { openPopUp, setOpenPopUp, data, data2, setPresionado, presionado, tipo, setRecargar, estamosEn, aceptar } = props;
     const [list, setList] = useState(data.pedido)
-    const [list2, setList2] = useState(data.pedido)
-    const [materiales, setMateriales] = useState([])
-    const [nuevaSet, setNuevaSet] = useState([]); // esta es la lista de materiales
-    const [currentIngredientes, serCurrentIngredientes] = useState([])
-    const [loading, setLoading] = useState(true);
-    const [matActualizar, setMatActualizar] = useState([]) // esta es la que se deberá actualizar
     const [mod, setMod] = useState(false)
-    const [numEmpanadas, setNumEmpanadas] = useState([])
     const [finanza, setFinanza] = useState([])
     const [dtF, setDtF] = useState([])
     const [fecha, setFecha] = useState(() => obtenerFechaFormateada())
-    const [existe, setExiste] = useState(true)
+    const [existe, setExiste] = useState(false)
     const [mensaje, setMensaje] = useState(false)
     const [mensaje2, setMensaje2] = useState(false)
     const [dtfB, setDTFB] = useState(false)
+    const [productos, setProductos] = useState([])
+    const [productosA, setProductosA] = useState([])
+    const [nuevosProductos, setNuevosProductos] = useState([])
+    const [loadingA, setLoadingA] = useState(false)
     const router = useRouter()
-
-    const [newData, setNewData] = useState({
-        contador: data.contador,
-        pedido: data.pedido,
-        total: data.total,
-        fecha: data.fecha,
-        hora: data.hora
-    })
-    // aquí vamos a restar empanadas
-    const fetchData = async () => {
-        try {
-            const result = await obtener("empanadas");
-            setNumEmpanadas(result);
-        } catch (error) {
-            // Handle the error if needed
-            console.error("Error fetching data:", error);
-        }
-    };
 
     const fetchFinanza = async () => {
         try {
             const result = await obtener("finanza");
             setFinanza(result);
         } catch (error) {
+            console.error("Error fetching data:", error);
+        }
+    };
+    const fetchProductosDescontar = async () => {
+        try {
+            let deDonde = ""
+            if (estamosEn == "mayorista-fabrica") {
+                deDonde = "productosFabrica";
+            } else if (estamosEn == "mayorista-minorista") {
+                deDonde = "productosMayorista"
+            }
+            const result = await obtener(deDonde);
+            setProductos(result);
+        } catch (error) {
+            // Handle the error if needed
+            console.error("Error fetching data:", error);
+        }
+    };
+    const fetchProductosAcreditar = async () => {
+        try {
+            let deDonde = ""
+            if (estamosEn == "mayorista-fabrica") {
+                deDonde = "productosMayorista";
+            } else if (estamosEn == "mayorista-minorista") {
+                deDonde = "productosMinorista"
+            }
+            const result = await obtener(deDonde);
+            setProductosA(result);
+            setLoadingA(true)
+        } catch (error) {
+            // Handle the error if needed
             console.error("Error fetching data:", error);
         }
     };
@@ -114,15 +124,11 @@ export default function ModalPedidoEmpleado(props) {
         setDTFB(true)
     };
 
-    // logica para restar de ingredientes
-    const obtenerMateriales = async (lista) => {
-        let mat = await obtener("materiales")
-        setMateriales(mat)
-    }
     useEffect(() => {
-        obtenerMateriales();
-        fetchData();
         fetchFinanza();
+        fetchProductosDescontar()
+        fetchProductosAcreditar()
+        console.log("Data", data)
     }, []);
     useEffect(() => {
         if (finanza.length) {
@@ -145,74 +151,103 @@ export default function ModalPedidoEmpleado(props) {
         }
     }, [dtF])
 
-    const restarEmpanadas = (cantidad) => {
-        let restar = cantidad;
-        if (numEmpanadas[0].masaAyer > 0) {
-            if ((numEmpanadas[0].masaAyer >= cantidad)) {
-                // aquí solo se la voy a quitar a numEmpanadas[0].masaAyer
-                numEmpanadas[0].masaAyer = numEmpanadas[0].masaAyer - cantidad
-                modificarDocumento(numEmpanadas[0].id, "empanadas", numEmpanadas[0])
-                // luego de quitarle
-                restar = 0
-            } else {
-                restar = cantidad - numEmpanadas[0].masaAyer // Aquí le quito a empanada ayer y me preparo para quitarle a empanada hoy
-                numEmpanadas[0].masaAyer = 0
-                // luego de quitarle continuo
-            }
-        }
-        if (restar != 0) {
-            // aquí debo quitarle a empanadaHoy
-            numEmpanadas[0].cantidad = numEmpanadas[0].cantidad - restar
-            modificarDocumento(numEmpanadas[0].id, "empanadas", numEmpanadas[0])
-        }
-
-    }
-
-    useEffect(() => {
-        if (materiales.length > 0) {
-            if (list.length > 0) {
-                const updatedNuevaSet = [];
-                const updateIngredientes = []
-                for (let i = 0; i < list.length; i++) {
-                    if (list[i].ingredientes > 0) {
-                        list[i].ingredientes.forEach((ltItem) => {
-                            const material = materiales.find((mat) => mat.id === ltItem.id);
-                            if (material) {
-                                updatedNuevaSet.push(material);
-                                ltItem.cantidad = ltItem.cantidad * list[i].cantidadLocal
-                                updateIngredientes.push(ltItem)
-                            }
-                        });
+    useEffect(() => { // aquí hago el descuento de las existencias
+        if (productos.length > 0 && data2.pedido.length > 0 && loadingA) {
+            let acreditar = []
+            for (let i = 0; i < productos.length; i++) {
+                for (let j = 0; j < data2.pedido.length; j++) {
+                    if (productos[i].id == data2.pedido[j].id) {
+                        productos[i].existencia -= data2.pedido[j].cantidadLocal;
+                        console.log("Acreditar: ", data2.pedido[j].nombre)
+                        acreditar.push(data2.pedido[j])
                     }
-                    
                 }
-                setLoading(false)
-                serCurrentIngredientes(sumAndMergeDuplicates(updateIngredientes));
-                setNuevaSet(removeDuplicatesById(updatedNuevaSet));
             }
+            // esto de aquí son los productos que voy a comprar
+            for (let i = 0; i < acreditar.length; i++) {
+                let existing = productosA.find((item)=>item.nombre == acreditar[i].nombre)
+                if(existing){
+                    existing.existencia += acreditar[i].cantidadLocal;
+                }else{
+                    let prod = {
+                        caducidad:acreditar[i].caducidad,
+                        cantidadLocal:0,
+                        existencia:acreditar[i].cantidadLocal,
+                        fecha:acreditar[i].fecha,
+                        imagen:acreditar[i].imagen,
+                        medida:acreditar[i].medida,
+                        nombre:acreditar[i].nombre,
+                        precio:acreditar[i].precio,
+                        unidades:acreditar[i].unidades
+                    }
+                    nuevosProductos.push(prod)
+                }
+            }
+            console.log("Productos A", productosA, "Nuevos productos", nuevosProductos)
         }
-    }, [materiales])
-
-    useEffect(() => {
-        setMatActualizar(subtractQuantities(nuevaSet, currentIngredientes))
-    }, [nuevaSet, currentIngredientes])
+    }, [productos, data2, productosA, loadingA])
 
     const pedir = () => {
         if (list.length > 0) {
-            const pedidos = {
-                contador: data.contador,
-                estado: data.estado,
-                fecha: data.fecha,
-                pedido: list,
-                total: data.total,
-                hora: data.hora,
-                matActualizar: data.matActualizar,
+            let pedidos = {
             }
-            console.log("Pedir despues", list, list2)
-            enviar("finanza", pedidos)
-            sessionStorage.setItem('ordenList', JSON.stringify([]));
-            // esto ya funcionaba para cerrar el modal
-            eliminarDocumento("pedidos", data.id)
+            if (estamosEn == "mayorista-fabrica") {
+                pedidos = {
+                    contador: data.contador,
+                    estado: data.estado,
+                    fecha: data.fecha,
+                    pedido: list,
+                    total: data.total,
+                    hora: data.hora,
+                    minorista: data.minorista
+                }
+                console.log(typeof pedidos, typeof productos, typeof productosA)
+                sessionStorage.setItem('ordenList', JSON.stringify([]));
+                // actualizo las existencias
+                for(let i = 0; i<productos.length; i++){
+                    modificarDocumento(productos[i].id, "productosFabrica", productos[i])
+                }
+                for(let i = 0; i<productosA.length; i++){
+                    modificarDocumento(productosA[i].id, "productosMayorista", productosA[i])
+                }
+                // envio los nuevos productos comprados
+                for(let i=0; i<nuevosProductos.length; i++){
+                    enviar("productosMayorista", nuevosProductos[i])
+                }
+                // envio el registro del pedido a finanza
+                enviar("finanzaFabrica", pedidos)
+                eliminarDocumento("pedidosFabrica", data.id)
+                // me falta agregar los productos que compré a los produtos del mayorista
+            } else if (estamosEn == "mayorista-minorista") {
+                pedidos = {
+                    contador: data.contador,
+                    estado: data.estado,
+                    fecha: data.fecha,
+                    pedido: list,
+                    total: data.total,
+                    hora: data.hora,
+                    minorista: data.minorista
+                }
+                console.log(typeof pedidos, typeof productos, typeof productosA)
+                sessionStorage.setItem('ordenList', JSON.stringify([]));
+                // actualizo las existencias
+                for(let i = 0; i<productos.length; i++){
+                    modificarDocumento(productos[i].id, "productosMayorista", productos[i])
+                }
+                for(let i = 0; i<productosA.length; i++){
+                    modificarDocumento(productosA[i].id, "productosMinorista", productosA[i])
+                }
+                // envio los nuevos productos comprados
+                for(let i=0; i<nuevosProductos.length; i++){
+                    enviar("productosMinorista", nuevosProductos[i])
+                }
+                // envio el registro del pedido a finanza
+                enviar("finanzaMayorista", pedidos)
+                eliminarDocumento("pedidosMayorista", data.id)
+                // me falta agregar los productos que compré a los produtos del mayorista
+            } else {
+
+            }
             setPresionado(!presionado)
             setRecargar(true)
             setOpenPopUp(false);
@@ -220,15 +255,6 @@ export default function ModalPedidoEmpleado(props) {
     }
 
     const modificarMateriales = () => {
-        if (data.nombre != "empanada") {
-            for (let i = 0; i < data.matActualizar.length; i++) {
-                modificarDocumento(data.matActualizar[i].id, "materiales", data.matActualizar[i])
-            }
-        }
-        let emp = list.find((item) => item.nombre == "empanada")
-        if (emp) {
-            restarEmpanadas(emp.cantidadLocal)
-        }
         setMod(true)
     }
 
@@ -241,7 +267,7 @@ export default function ModalPedidoEmpleado(props) {
     return (
         <div>
             <div className={styles.tarjetas}>
-                <div className={styles.numeroPedido}>Pedido #{newData.contador}</div>
+                <div className={styles.numeroPedido}>Pedido #{data.contador}</div>
                 {mensaje && <div className={styles.error}>Este pedido ya ha sido enviado, recargue la página o revise los pedidos enviados</div>}
                 {mensaje2 && <div className={styles.error}>No se puede enviar un pedido que ya se ha enviado</div>}
                 <div className={styles.items}>
@@ -249,7 +275,7 @@ export default function ModalPedidoEmpleado(props) {
                         return (<PlatilloConfirmar key={item.nombre} data={item} list={list} setList={setList}></PlatilloConfirmar>)
                     })}
                 </div>
-                <div className={styles.totalPedido}>Total: {newData.total}</div>
+                <div className={styles.totalPedido}>Total: {data.total}</div>
             </div>
             <div className={styles.centrar}>
                 <button
@@ -261,7 +287,7 @@ export default function ModalPedidoEmpleado(props) {
                 >
                     Cancelar
                 </button>
-                <button
+                {aceptar && <button
                     className={styles.boton2}
                     type=""
                     onClick={() => {
@@ -274,7 +300,7 @@ export default function ModalPedidoEmpleado(props) {
                     }}
                 >
                     Enviar Orden
-                </button>
+                </button>}
             </div>
         </div>
     )

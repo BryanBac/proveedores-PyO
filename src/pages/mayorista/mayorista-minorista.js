@@ -35,7 +35,7 @@ export default function Home() {
     }, [router]);
     const fetchData = async () => {
         try {
-            const result = await obtener("productos");
+            const result = await obtener("productosMayorista");
             setPlatillos(result);
         } catch (error) {
             // Handle the error if needed
@@ -119,7 +119,7 @@ export default function Home() {
         if (eliminarRestaurar) {
             if (restaurar.length > 0) {
                 for (let i = 0; i < restaurar.length; i++) {
-                    eliminarDocumento("restaurar", restaurar[i].id)
+                    eliminarDocumento("restaurarMayorista", restaurar[i].id)
                 }
                 setEliminarRestaurar(false)
             }
@@ -142,10 +142,10 @@ export default function Home() {
                             modificarDocumento(matA[i].id, "materiales", matA[i])
                         }
                     }
-                    enviar("finanza", data)
-                    eliminarDocumento("pedidos", pedidos[i].id)
+                    enviar("finanzaMayorista", data)
+                    eliminarDocumento("pedidosMayorista", pedidos[i].id)
                     contador[0].actual = 0;
-                    modificarDocumento(contador[0].id, "contador", contador[0])
+                    modificarDocumento(contador[0].id, "contadorMayorista", contador[0])
                 }
                 // setEliminarPedidos(false)
             }
@@ -161,6 +161,9 @@ export default function Home() {
         if (platillos.length > 0) {
             const sortedList = [...platillos].sort((a, b) => a.contador - b.contador);
             setOrden(sortedList)
+            setLoading(false)
+        }else{
+            setOrden(platillos)
             setLoading(false)
         }
     }, [platillos])
