@@ -228,11 +228,11 @@ const Home = () => {
                     <InactivityAlert2 />
                     <div className={styles.container}>
                         <Link className={styles.panel} href="minorista-ordenar" onClick={() => setear()}>
-                            <div className={styles.primero}><img src="list.png" className={styles.imagen} alt="/imagen no encontrada"></img></div>
+                            <div className={styles.primero}><img src="/../public/list.png" className={styles.imagen} alt="/imagen no encontrada"></img></div>
                             <div className={styles.segundo}> <div className={styles.sin}>Realizar Pedido</div> </div>
                         </Link>
                         <Link className={styles.panel} href="minorista-pedidosEmpleados">
-                            <div className={styles.primero}><img src="clock.png" className={styles.imagen} alt="/imagen no encontrada"></img></div>
+                            <div className={styles.primero}><img src="/../public/clock.png" className={styles.imagen} alt="/imagen no encontrada"></img></div>
                             <div className={styles.segundo}><div className={styles.sin}>Ver Pedidos</div> </div>
                         </Link>
                     </div>
