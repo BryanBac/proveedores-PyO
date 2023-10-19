@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react'
 import ArrowBack from '@/components/arrow_back'
 import ArrowForward from '@/components/arrow_forward'
 import Platillo from '@/components/platillo'
-import Link from 'next/link'
 import InactivityAlert2 from '@/components/InactivityEmployee'
 import { useRouter } from 'next/router'
 import MiniDrawer from '../menuV2'
@@ -38,21 +37,11 @@ const Pedidos = () => {
     const [actualizar, setActualizar] = useState(false)
     const itemsPerPage = 4; // Number of items to display per page
 
-    const nombresAQuitar = [
-        "Granizada 1 Ingrediente",
-        "Granizada 2 Ingredientes",
-        "Granizada 3 Ingredientes",
-        "Granizada 4 Ingredientes",
-        "Granizada Mango Limon",
-        "Extra"
-    ];
-
     const [list, setList] = useState(() => {
         if (typeof window !== 'undefined' && window.sessionStorage) {
             const storedList = sessionStorage.getItem('platilloList');
             let listaPreOrden = JSON.parse(storedList)
-            const listaFiltrada = listaPreOrden.filter((objeto) => !nombresAQuitar.includes(objeto.nombre));
-            return listaFiltrada
+            return listaPreOrden
         } else {
             return []
         }
@@ -156,46 +145,8 @@ const Pedidos = () => {
             alert('No se han ingresado productos')
         }
         else {
-            router.push("/minoristas/minorista-verificarOrden")
+            router.push("minorista-verificarOrden")
         }
-    }
-    const setear2 = () => {
-        let orden = listOrden;
-        console.log("LOrden", listOrden)
-        let contador = 1;
-        let nuevaO = []
-        for (let i = 0; i < list.length; i++) {
-            if (list[i].cantidadLocal != 0) {
-                const objeto = {
-                    id: contador,
-                    imagen: list[i].imagen,
-                    precio: list[i].precio,
-                    cantidadLocal: list[i].cantidadLocal,
-                    nombre: list[i].nombre,
-                    ingredientes: list[i].ingredientes,
-                    contador: list[i].contador
-                }
-                if (!modificarCantidadLocal(orden, list[i].nombre, list[i].cantidadLocal)) {
-                    orden.push(objeto)
-                }
-                contador += 1
-            } else {
-                const objeto = {
-                    id: contador,
-                    imagen: list[i].imagen,
-                    precio: list[i].precio,
-                    cantidadLocal: list[i].cantidadLocal,
-                    nombre: list[i].nombre,
-                    ingredientes: list[i].ingredientes,
-                    contador: list[i].contador
-                }
-                orden.push(objeto)
-                contador += 1
-            }
-        }
-        console.log("orden", typeof orden)
-        sessionStorage.setItem('ordenList', JSON.stringify(orden));
-        //router.push("/ordenarGranizadas")
     }
     useEffect(() => {
         if (list) {
@@ -225,7 +176,6 @@ const Pedidos = () => {
                                     <div className={styles.cajaTotales}>{total}</div>
                                 </div>
                             </div>
-
                             <div className={styles.tarjetas}>
                                 {currentItems.map((item) => {
                                     return (<Platillo setListOrden={setListOrden} listO={listOrden} data={item} key={item.id} list={list} setList={setList} setActualizar={setActualizar}></Platillo>)

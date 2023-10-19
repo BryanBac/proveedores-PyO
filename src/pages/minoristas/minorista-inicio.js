@@ -56,7 +56,7 @@ const Home = () => {
     }, [])
     const fetchData = async () => {
         try {
-            const result = await obtener("productos");
+            const result = await obtener("productosMayorista");
             setPlatillos(result);
         } catch (error) {
             // Handle the error if needed
@@ -74,7 +74,7 @@ const Home = () => {
     };
     const fetchContador = async () => {
         try {
-            const result = await obtener("contador");
+            const result = await obtener("contadorMayorista");
             setContador(result);
         } catch (error) {
             // Handle the error if needed
@@ -83,7 +83,7 @@ const Home = () => {
     };
     const fetchPedidos = async () => {
         try {
-            const result = await obtener("pedidos");
+            const result = await obtener("pedidosMayorista");
             setPedidos(result);
         } catch (error) {
             // Handle the error if needed
@@ -92,7 +92,7 @@ const Home = () => {
     };
     const fetchRestaurar = async () => {
         try {
-            const result = await obtener("restaurar");
+            const result = await obtener("restaurarMayorista");
             setRestaurar(result);
         } catch (error) {
             // Handle the error if needed
@@ -153,7 +153,7 @@ const Home = () => {
         if (eliminarRestaurar) {
             if (restaurar.length > 0) {
                 for (let i = 0; i < restaurar.length; i++) {
-                    eliminarDocumento("restaurar", restaurar[i].id)
+                    eliminarDocumento("restaurarMayorista", restaurar[i].id)
                 }
                 setEliminarRestaurar(false)
             }
@@ -178,13 +178,10 @@ const Home = () => {
                         }
                     }
                     enviar("finanza", data)
-                    eliminarDocumento("pedidos", pedidos[i].id)
+                    eliminarDocumento("pedidosMayorista", pedidos[i].id)
                     contador[0].actual = 0;
-                    modificarDocumento(contador[0].id, "contador", contador[0])
-                    let emp = pedidos[i].pedido.find((item) => item.nombre == "empanada")
-                    if (emp) {
-                        empanadasCantidad = empanadasCantidad + emp.cantidadLocal
-                    }
+                    modificarDocumento(contador[0].id, "contadorMayorista", contador[0])
+                    
                 }
                 // setEliminarPedidos(false)
             }

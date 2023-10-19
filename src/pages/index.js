@@ -39,7 +39,7 @@ export default function Home() {
                     if (sessionStorage.getItem("tipo") === "1") {
                         router.push('/menuV2');
                     }else{
-                        router.push('/inicio');
+                        router.push('/menuV2');
                     }
                 }
             } catch (error) {

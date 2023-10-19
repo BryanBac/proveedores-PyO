@@ -106,7 +106,7 @@ const Pedidos = () => {
                             openPopUp={openPopUp}
                             setOpenPopUp={setOpenPopUp}
                         >
-                            <ModalPedidoEmpleado estamosEn={"mayorista-fabrica"} recargar={recargar} setRecargar={setRecargar} data={dataPresionada} data2={dataPresionada} tipo={true} presionado={presionado} setPresionado={setPresionado} aceptar={true}></ModalPedidoEmpleado>
+                            <ModalPedidoEmpleado estamosEn={"mayorista-minorista"} recargar={recargar} setRecargar={setRecargar} data={dataPresionada} data2={dataPresionada} tipo={true} presionado={presionado} setPresionado={setPresionado} aceptar={true}></ModalPedidoEmpleado>
                         </ModalPopUp>
                         <InactivityAlert2 />
                         <div className={styles.tarjetas}>

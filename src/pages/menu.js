@@ -17,8 +17,13 @@ export default function Home() {
         if (sessionStorage.getItem("acceso") !== "true") {
           router.push('/');
         }
-        if (sessionStorage.getItem("tipo") !== "1") {
-          router.push('/');
+        if (sessionStorage.getItem("tipo") == "1") {
+          router.replace('/fabrica/inicio');
+        } else if (sessionStorage.getItem("tipo") == "2") {
+          router.replace('/mayorista/mayorista-inicio');
+        } else if (sessionStorage.getItem("tipo") == "3") {
+          router.replace('/minorista/minorista-inicio');
+        } else {
         }
       } catch (error) {
         router.push('/');
