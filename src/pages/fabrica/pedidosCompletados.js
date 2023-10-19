@@ -1,37 +1,54 @@
 import Head from 'next/head'
 import styles from '@/styles/Pedidos.module.css'
 import HomeBar from '@/components/home_bar'
-import { useRouter } from 'next/router'
+import { dataPedidos } from '@/components/mock_tarjetas'
 import Pedido from '@/components/tarjeta_orden'
 import { useEffect, useState } from 'react'
 import ArrowBack from '@/components/arrow_back'
 import ArrowForward from '@/components/arrow_forward'
 import obtener from '../api/firebase/get-data'
 import ModalPopUp from '@/components/popup/popup'
-import ModalPedidoEmpleado from '@/components/popup/modalPedidoEmpleado'
+import ModalPedido from '@/components/popup/modalPedidoFabrica'
+import { useRouter } from "next/router";
 import ColorIdentifier from '@/components/colorIndentifier'
-import InactivityAlert2 from '@/components/InactivityEmployee'
-import MiniDrawer from '../menuV2'
+import MiniDrawer from "../menuV2";
 
-const Pedidos = () => {
+const PedidosRestaurar = () => {
+    const router = useRouter()
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            try {
+                if (sessionStorage.getItem("acceso") !== "true") {
+                    router.push('/');
+                }
+                if (sessionStorage.getItem("tipo") == "2") {
+                    router.replace('/mayorista/mayorista-inicio');
+                } else if (sessionStorage.getItem("tipo") == "3") {
+                    router.replace('/minoristas/minorista-inicio');
+                }else{
+                }
+            } catch (error) {
+                console.error(error)
+            }
+        }
+    }, [])
     const itemsPerPage = 6; // Number of items to display per page
-    const [list, setList] = useState([]); // Your list of objects
+    const [list, setList] = useState(dataPedidos); // Your list of objects
     const [currentPage, setCurrentPage] = useState(1); // Current page number
     const [openPopUp, setOpenPopUp] = useState(false);
     const [dataPresionada, setDataPresionada] = useState([])
+    const [presionado, setPresionado] = useState(false)
     // con timer
     const [contador, setContador] = useState(0)
     const [seconds, setSeconds] = useState(0);
-    const [presionado, setPresionado] = useState(false)
-    const [recargar, setRecargar] = useState(false)
-    const router = useRouter()
+
     // obtener pedidos
     const [dt, setData] = useState([])
     // Así es como obtendo data
     const fetchData = async () => {
         try {
-            const result = await obtener("pedidosFabrica");
-            let listaOrdenada = result.sort((a, b) => a.contador - b.contador);
+            const result = await obtener("completadosFabrica");
+            let listaOrdenada = result.sort((a, b) => b.contador - a.contador);
             setData(listaOrdenada);
         } catch (error) {
             // Handle the error if needed
@@ -42,29 +59,6 @@ const Pedidos = () => {
         fetchData();
     }, [presionado]);
 
-    useEffect(() => {
-        if (recargar) {
-            // router.reload()
-        }
-    }, [recargar])
-
-    useEffect(() => {
-        if (typeof window !== 'undefined') {
-            try {
-                if (sessionStorage.getItem("acceso") !== "true") {
-                    router.push('/');
-                }
-                if (sessionStorage.getItem("tipo") == "1") {
-                    router.replace('/fabrica/inicio');
-                } else if (sessionStorage.getItem("tipo") == "3") {
-                    router.replace('/minoristas/minorista-inicio');
-                }else{
-                }
-            } catch (error) {
-                console.error(error)
-            }
-        }
-    }, [])
 
     // Calculate the range of items to display based on the current page
     let startIndex = (currentPage - 1) * itemsPerPage;
@@ -106,17 +100,16 @@ const Pedidos = () => {
                             openPopUp={openPopUp}
                             setOpenPopUp={setOpenPopUp}
                         >
-                            <ModalPedidoEmpleado estamosEn={"mayorista-fabrica"} recargar={recargar} setRecargar={setRecargar} data={dataPresionada} data2={dataPresionada} tipo={true} presionado={presionado} setPresionado={setPresionado} aceptar={true}></ModalPedidoEmpleado>
+                            <ModalPedido data={dataPresionada} presionado={presionado} setPresionado={setPresionado}></ModalPedido>
                         </ModalPopUp>
-                        <InactivityAlert2 />
                         <div className={styles.tarjetas}>
                             {currentItems.map((item) => {
                                 if (dt.length > 0) {
                                     if (dt[dt.length - 1]['id'] == item.id) {
-                                        return (<Pedido data={item} key={item.id} setOpenPopUp={setOpenPopUp} setDataPresionada={setDataPresionada} setColor={'azul'} ></Pedido>)
+                                        return (<Pedido data={item} key={item.id} setOpenPopUp={setOpenPopUp} setDataPresionada={setDataPresionada} setColor={'rojo'} ></Pedido>)
                                     }
                                     else if (dt[0]['id'] == item.id) {
-                                        return (<Pedido data={item} key={item.id} setOpenPopUp={setOpenPopUp} setDataPresionada={setDataPresionada} setColor={'rojo'} ></Pedido>)
+                                        return (<Pedido data={item} key={item.id} setOpenPopUp={setOpenPopUp} setDataPresionada={setDataPresionada} setColor={'azul'} ></Pedido>)
                                     }
                                     else {
                                         return (<Pedido data={item} key={item.id} setOpenPopUp={setOpenPopUp} setDataPresionada={setDataPresionada}></Pedido>)
@@ -131,4 +124,4 @@ const Pedidos = () => {
         </>
     )
 }
-export default Pedidos;
+export default PedidosRestaurar

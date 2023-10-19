@@ -8,21 +8,35 @@ import enviar from '../api/firebase/post-data'
 import modificarDocumento from '../api/firebase/update-data'
 import eliminarDocumento from '../api/firebase/delete-data'
 import Loader from '@/components/loader'
+import TablaProductos from '@/components/tables/tablaProductos'
 import InactivityAlert2 from '@/components/InactivityEmployee'
+import ModalPopUp from '@/components/popup/popup'
+import ModalPedidoFinanciero from '@/components/popup/modalPedidoFinanciero'
 import { useRouter } from 'next/router'
 import MiniDrawer from '../menuV2'
+
 
 const Home = () => {
     const [platillos, setPlatillos] = useState([]);
     const [orden, setOrden] = useState([]);
-    const [fechaFirebase, setFechaFirebase] = useState([])
-    const [pedidos, setPedidos] = useState([])
+    const [fechaFirebase, setFechaFirebase] = useState([]);
+    const [pedidos, setPedidos] = useState([]);
     const [contador, setContador] = useState([])
+    const [openPopUp, setOpenPopUp] = useState(false);
+    const [dataPresionada, setDataPresionada] = useState([])
     const [loading, setLoading] = useState(true);
+    const [dataProductos, setDataProductos] = useState([])
+    const [finanza, setFinanza] = useState([]);
+    const [total, setTotal] = useState(0)
+    const [presionado, setPresionado] = useState(false)
     const [restaurar, setRestaurar] = useState([])
     const [eliminarRestaurar, setEliminarRestaurar] = useState(false)
     const [eliminarPedidos, setEliminarPedidos] = useState(false)
+    const [fechaHoy, setFechaHoy] = useState("")
+    const [numEmpanadas, setNumEmpanadas] = useState([])
+    const [empCant, setEmpCant] = useState(0)
     const router = useRouter()
+
     useEffect(() => {
         if (typeof window !== 'undefined') {
             try {
@@ -31,8 +45,8 @@ const Home = () => {
                 }
                 if (sessionStorage.getItem("tipo") == "1") {
                     router.replace('/fabrica/inicio');
-                } else if (sessionStorage.getItem("tipo") == "3") {
-                    router.replace('/minoristas/minorista-inicio');
+                } else if (sessionStorage.getItem("tipo") == "2") {
+                    router.replace('/mayorista/mayorista-inicio');
                 }else{
                 }
             } catch (error) {
@@ -42,7 +56,7 @@ const Home = () => {
     }, [])
     const fetchData = async () => {
         try {
-            const result = await obtener("productosMayorista");
+            const result = await obtener("productos");
             setPlatillos(result);
         } catch (error) {
             // Handle the error if needed
@@ -60,7 +74,7 @@ const Home = () => {
     };
     const fetchContador = async () => {
         try {
-            const result = await obtener("contadorMayorista");
+            const result = await obtener("contador");
             setContador(result);
         } catch (error) {
             // Handle the error if needed
@@ -69,7 +83,7 @@ const Home = () => {
     };
     const fetchPedidos = async () => {
         try {
-            const result = await obtener("pedidosMayorista");
+            const result = await obtener("pedidos");
             setPedidos(result);
         } catch (error) {
             // Handle the error if needed
@@ -78,7 +92,7 @@ const Home = () => {
     };
     const fetchRestaurar = async () => {
         try {
-            const result = await obtener("restaurarMayorista");
+            const result = await obtener("restaurar");
             setRestaurar(result);
         } catch (error) {
             // Handle the error if needed
@@ -100,12 +114,25 @@ const Home = () => {
                 fetchPedidos();
                 fetchRestaurar();
                 fetchContador();
+                fetchEmpanada()
             } else {
                 setOrden(JSON.parse(sessionStorage.getItem("platos")))
             }
         }
         fetchData();
     }, []);
+
+    useEffect(() => {
+        if (dataProductos.length > 0) {
+            let st = 0
+            for (let i = 0; i < dataProductos.length; i++) {
+                st = st + dataProductos[i].total;
+            }
+            setTotal(st)
+        } else {
+            setTotal(0)
+        }
+    }, [dataProductos])
     useEffect(() => {
         if (fechaFirebase.length > 0) {
             const currentDate = new Date();
@@ -126,12 +153,13 @@ const Home = () => {
         if (eliminarRestaurar) {
             if (restaurar.length > 0) {
                 for (let i = 0; i < restaurar.length; i++) {
-                    eliminarDocumento("restaurarMayorista", restaurar[i].id)
+                    eliminarDocumento("restaurar", restaurar[i].id)
                 }
                 setEliminarRestaurar(false)
             }
         }
         if (eliminarPedidos) {
+            let empanadasCantidad = 0;
             if (pedidos.length > 0) {
                 for (let i = 0; i < pedidos.length; i++) {
                     const data = {
@@ -149,15 +177,21 @@ const Home = () => {
                             modificarDocumento(matA[i].id, "materiales", matA[i])
                         }
                     }
-                    enviar("finanzaMayorista", data)
-                    eliminarDocumento("pedidosMayorista", pedidos[i].id)
+                    enviar("finanza", data)
+                    eliminarDocumento("pedidos", pedidos[i].id)
                     contador[0].actual = 0;
-                    modificarDocumento(contador[0].id, "contadorMayorista", contador[0])
+                    modificarDocumento(contador[0].id, "contador", contador[0])
+                    let emp = pedidos[i].pedido.find((item) => item.nombre == "empanada")
+                    if (emp) {
+                        empanadasCantidad = empanadasCantidad + emp.cantidadLocal
+                    }
                 }
                 // setEliminarPedidos(false)
             }
+            setEmpCant(empanadasCantidad)
         }
     }, [eliminarRestaurar, eliminarPedidos, restaurar, pedidos])
+
     const setear = () => {
         sessionStorage.setItem("platilloList", JSON.stringify(orden));
         sessionStorage.setItem("ordenList", JSON.stringify(orden));
@@ -169,11 +203,14 @@ const Home = () => {
             const sortedList = [...platillos].sort((a, b) => a.contador - b.contador);
             setOrden(sortedList)
             setLoading(false)
-        } else {
-            setOrden(platillos)
-            setLoading(false)
         }
     }, [platillos])
+    useEffect(() => {
+        if (empCant > 0 && numEmpanadas.length > 0) {
+            restarEmpanadas(empCant)
+        }
+    }, [empCant, numEmpanadas])
+
     return (
         <>
             <Head>
@@ -185,15 +222,21 @@ const Home = () => {
             {loading == true && <Loader></Loader>}
             <MiniDrawer>
                 <div>
+                    <ModalPopUp
+                        openPopUp={openPopUp}
+                        setOpenPopUp={setOpenPopUp}
+                    >
+                        <ModalPedidoFinanciero data={dataPresionada} tipo={true} presionado={presionado} setPresionado={setPresionado}></ModalPedidoFinanciero>
+                    </ModalPopUp>
                     <InactivityAlert2 />
                     <div className={styles.container}>
-                        <Link className={styles.panel} href="mayorista-minorista-ordenar" onClick={() => setear()}>
-                            <div className={styles.primero}><img src="../list.png" className={styles.imagen} alt="/imagen no encontrada"></img></div>
-                            <div className={styles.segundo}> <div className={styles.sin}>Vender</div> </div>
+                        <Link className={styles.panel} href="minorista-ordenar" onClick={() => setear()}>
+                            <div className={styles.primero}><img src="list.png" className={styles.imagen} alt="/imagen no encontrada"></img></div>
+                            <div className={styles.segundo}> <div className={styles.sin}>Realizar Pedido</div> </div>
                         </Link>
-                        <Link className={styles.panel} href="mayorista-minorista-pedidosEmpleados">
-                            <div className={styles.primero}><img src="../clock.png" className={styles.imagen} alt="/imagen no encontrada"></img></div>
-                            <div className={styles.segundo}><div className={styles.sin}>Pedidos de minorista</div> </div>
+                        <Link className={styles.panel} href="minorista-pedidosEmpleados">
+                            <div className={styles.primero}><img src="clock.png" className={styles.imagen} alt="/imagen no encontrada"></img></div>
+                            <div className={styles.segundo}><div className={styles.sin}>Ver Pedidos</div> </div>
                         </Link>
                     </div>
                 </div>
@@ -201,4 +244,4 @@ const Home = () => {
         </>
     )
 }
-export default Home
+export default Home;

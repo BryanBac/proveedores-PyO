@@ -2,12 +2,11 @@ import styles from '@/styles/Inicio.module.css'
 import Head from 'next/head'
 import HomeBar from '@/components/home_bar'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
-import InactivityAlert2 from '@/components/InactivityEmployee'
-import { useRouter } from 'next/router'
+import { useRouter } from "next/router";
+import { useEffect } from 'react'
 import MiniDrawer from '../menuV2'
 
-const MayoristaInicio = () => {
+const PedidosMenu = () => {
     const router = useRouter()
     useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -15,11 +14,10 @@ const MayoristaInicio = () => {
                 if (sessionStorage.getItem("acceso") !== "true") {
                     router.push('/');
                 }
-                console.log(sessionStorage.getItem("tipo"))
                 if (sessionStorage.getItem("tipo") == "1") {
                     router.replace('/fabrica/inicio');
-                } else if (sessionStorage.getItem("tipo") == "3") {
-                    router.replace('/minoristas/minorista-inicio');
+                } else if (sessionStorage.getItem("tipo") == "2") {
+                    router.replace('/mayorista/mayorista-inicio');
                 }else{
                 }
             } catch (error) {
@@ -37,15 +35,14 @@ const MayoristaInicio = () => {
             </Head>
             <MiniDrawer>
                 <div>
-                    <InactivityAlert2 />
                     <div className={styles.container}>
-                        <Link className={styles.panel} href="mayorista-fabrica">
-                            <div className={styles.primero}><img src="../fabrica.png" className={styles.imagen} alt="/imagen no encontrada"></img></div>
-                            <div className={styles.segundo}> <div className={styles.sin}>Fabrica</div> </div>
+                        <Link className={styles.panel} href="/minoristas/minorista-pedidosRestaurar">
+                            <div className={styles.primero}><img src="refresh.png" className={styles.imagen} alt="/imagen no encontrada"></img></div>
+                            <div className={styles.segundo}> <div className={styles.sin}>Restaurar Pedidos</div> </div>
                         </Link>
-                        <Link className={styles.panel} href="mayorista-minorista">
-                            <div className={styles.primero}><img src="../minorista.png" className={styles.imagen} alt="/imagen no encontrada"></img></div>
-                            <div className={styles.segundo}><div className={styles.sin}>Minoristas</div> </div>
+                        <Link className={styles.panel} href="/minoristas/minorista-pedidos">
+                            <div className={styles.primero}><img src="pedidos.png" className={styles.imagen} alt="/imagen no encontrada"></img></div>
+                            <div className={styles.segundo}><div className={styles.sin}>Ver Pedidos</div> </div>
                         </Link>
                     </div>
                 </div>
@@ -53,4 +50,4 @@ const MayoristaInicio = () => {
         </>
     )
 }
-export default MayoristaInicio;
+export default PedidosMenu

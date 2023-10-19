@@ -1,11 +1,14 @@
+import Head from 'next/head'
 import styles from '@/styles/Ordenar.module.css'
+import HomeBar from '@/components/home_bar'
 import { useEffect, useState } from 'react'
 import ArrowBack from '@/components/arrow_back'
 import ArrowForward from '@/components/arrow_forward'
 import Platillo from '@/components/platillo'
+import Link from 'next/link'
 import InactivityAlert2 from '@/components/InactivityEmployee'
 import { useRouter } from 'next/router'
-import Head from 'next/head'
+import MiniDrawer from '../menuV2'
 
 function eliminarDuplicados(lista) {
     const listaSinDuplicados = [];
@@ -28,7 +31,7 @@ function eliminarDuplicados(lista) {
     return listaSinDuplicados;
 }
 
-const Ordenar = () => {
+const Pedidos = () => {
     const router = useRouter()
     const [total, setTotal] = useState(0)
     const [tamL, setTamL] = useState(0)
@@ -75,11 +78,17 @@ const Ordenar = () => {
                 if (sessionStorage.getItem("acceso") !== "true") {
                     router.push('/');
                 }
+                if (sessionStorage.getItem("tipo") == "1") {
+                    router.replace('/fabrica/inicio');
+                } else if (sessionStorage.getItem("tipo") == "2") {
+                    router.replace('/mayorista/mayorista-inicio');
+                }else{
+                }
             } catch (error) {
-                router.push('/');
+                console.error(error)
             }
         }
-    }, [router]);
+    }, [])
     useEffect(() => {
         if (actualizar) {
             let valor = 0;
@@ -126,7 +135,7 @@ const Ordenar = () => {
                     orden.push(objeto)
                 }
                 contador += 1
-            } else{
+            } else {
                 const objeto = {
                     id: contador,
                     imagen: list[i].imagen,
@@ -147,14 +156,14 @@ const Ordenar = () => {
             alert('No se han ingresado productos')
         }
         else {
-            router.push("/verificarOrden")
+            router.push("/minoristas/minorista-verificarOrden")
         }
     }
     const setear2 = () => {
         let orden = listOrden;
         console.log("LOrden", listOrden)
         let contador = 1;
-        let nuevaO= []
+        let nuevaO = []
         for (let i = 0; i < list.length; i++) {
             if (list[i].cantidadLocal != 0) {
                 const objeto = {
@@ -170,7 +179,7 @@ const Ordenar = () => {
                     orden.push(objeto)
                 }
                 contador += 1
-            } else{
+            } else {
                 const objeto = {
                     id: contador,
                     imagen: list[i].imagen,
@@ -186,7 +195,7 @@ const Ordenar = () => {
         }
         console.log("orden", typeof orden)
         sessionStorage.setItem('ordenList', JSON.stringify(orden));
-        router.push("/ordenarGranizadas")
+        //router.push("/ordenarGranizadas")
     }
     useEffect(() => {
         if (list) {
@@ -204,34 +213,33 @@ const Ordenar = () => {
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <div className={styles.inicio}>
-                <InactivityAlert2 />
-                <div className={styles.contenido}>
-                    <ArrowBack currentPage={currentPage} setCurrentPage={setCurrentPage}></ArrowBack>
-                    <div className={styles.contenidoContainer}>
-                        <div className={styles.totales}>
-                            <div className={styles.elementoTotales}>
-                                <div> Total: </div>
-                                <div className={styles.cajaTotales}>{total}</div>
+            <MiniDrawer>
+                <div className={styles.inicio}>
+                    <InactivityAlert2 />
+                    <div className={styles.contenido}>
+                        <ArrowBack currentPage={currentPage} setCurrentPage={setCurrentPage}></ArrowBack>
+                        <div className={styles.contenidoContainer}>
+                            <div className={styles.totales}>
+                                <div className={styles.elementoTotales}>
+                                    <div> Total: </div>
+                                    <div className={styles.cajaTotales}>{total}</div>
+                                </div>
                             </div>
+
+                            <div className={styles.tarjetas}>
+                                {currentItems.map((item) => {
+                                    return (<Platillo setListOrden={setListOrden} listO={listOrden} data={item} key={item.id} list={list} setList={setList} setActualizar={setActualizar}></Platillo>)
+                                })}
+                            </div>
+                            <div className={styles.centrarHorizontal}><button className={styles.boton} onClick={() => {
+                                setear()
+                            }}>Siguiente</button></div>
                         </div>
-                        <div className={styles.centrarHorizontal}><button className={styles.boton2} onClick={() => {
-                            setear2()
-                        }}><img className={styles.imagen} src="/Granizada.jpg" alt="/imagen no encontrada"></img></button></div>
-                        <div className={styles.tarjetas}>
-                            {currentItems.map((item) => {
-                                return (<Platillo setListOrden={setListOrden} listO={listOrden} data={item} key={item.id} list={list} setList={setList} setActualizar={setActualizar}></Platillo>)
-                            })}
-                        </div>
-                        <div className={styles.centrarHorizontal}><button className={styles.boton} onClick={() => {
-                            setear()
-                        }}>Siguiente</button></div>
+                        <ArrowForward endIndex={endIndex} tamañoLista={tamL} currentPage={currentPage} setCurrentPage={setCurrentPage}></ArrowForward>
                     </div>
-                    <ArrowForward endIndex={endIndex} tamañoLista={tamL} currentPage={currentPage} setCurrentPage={setCurrentPage}></ArrowForward>
                 </div>
-            </div>
+            </MiniDrawer>
         </>
     )
 }
-
-export default Ordenar
+export default Pedidos;

@@ -10,8 +10,9 @@ import eliminarDocumento from '../api/firebase/delete-data'
 import Loader from '@/components/loader'
 import InactivityAlert2 from '@/components/InactivityEmployee'
 import { useRouter } from 'next/router'
+import MiniDrawer from '../menuV2'
 
-export default function Home() {
+const Home = () => {
     const [platillos, setPlatillos] = useState([]);
     const [orden, setOrden] = useState([]);
     const [fechaFirebase, setFechaFirebase] = useState([])
@@ -28,11 +29,18 @@ export default function Home() {
                 if (sessionStorage.getItem("acceso") !== "true") {
                     router.push('/');
                 }
+                console.log("Mayorista - Fabrica", sessionStorage.getItem("tipo"))
+                if (sessionStorage.getItem("tipo") === "1") {
+                    router.replace('/fabrica/inicio');
+                } else if (sessionStorage.getItem("tipo") === "3") {
+                    router.replace('/minoristas/minorista-inicio');
+                }else{
+                }
             } catch (error) {
-                router.push('/');
+                console.error(error)
             }
         }
-    }, [router]);
+    }, [])
     const fetchData = async () => {
         try {
             const result = await obtener("productosFabrica");
@@ -137,7 +145,7 @@ export default function Home() {
                     }
                     let matA = []
                     matA = pedidos[i].matActualizar
-                    if(pedidos[i].matActualizar.length>0){
+                    if (pedidos[i].matActualizar.length > 0) {
                         for (let i = 0; i < matA.length; i++) {
                             modificarDocumento(matA[i].id, "materiales", matA[i])
                         }
@@ -162,7 +170,7 @@ export default function Home() {
             const sortedList = [...platillos].sort((a, b) => a.contador - b.contador);
             setOrden(sortedList)
             setLoading(false)
-        }else{
+        } else {
             setOrden(platillos)
             setLoading(false)
         }
@@ -176,20 +184,23 @@ export default function Home() {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             {loading == true && <Loader></Loader>}
-            <div>
-                <InactivityAlert2 />
-                <HomeBar enlace="mayorista-inicio"></HomeBar>
-                <div className={styles.container}>
-                    <Link className={styles.panel} href="mayorista-fabrica-ordenar" onClick={() => setear()}>
-                        <div className={styles.primero}><img src="../list.png" className={styles.imagen} alt="/imagen no encontrada"></img></div>
-                        <div className={styles.segundo}> <div className={styles.sin}>Comprar</div> </div>
-                    </Link>
-                    <Link className={styles.panel} href="mayorista-fabrica-pedidosEmpleados">
-                        <div className={styles.primero}><img src="../clock.png" className={styles.imagen} alt="/imagen no encontrada"></img></div>
-                        <div className={styles.segundo}><div className={styles.sin}>Pedidos a Fabrica</div> </div>
-                    </Link>
+            <MiniDrawer>
+                <div>
+                    <InactivityAlert2 />
+                    <div className={styles.container}>
+                        <Link className={styles.panel} href="mayorista-fabrica-ordenar" onClick={() => setear()}>
+                            <div className={styles.primero}><img src="../list.png" className={styles.imagen} alt="/imagen no encontrada"></img></div>
+                            <div className={styles.segundo}> <div className={styles.sin}>Comprar</div> </div>
+                        </Link>
+                        <Link className={styles.panel} href="mayorista-fabrica-pedidosEmpleados">
+                            <div className={styles.primero}><img src="../clock.png" className={styles.imagen} alt="/imagen no encontrada"></img></div>
+                            <div className={styles.segundo}><div className={styles.sin}>Pedidos a Fabrica</div> </div>
+                        </Link>
+                    </div>
                 </div>
-            </div>
+            </MiniDrawer>
         </>
     )
 }
+
+export default Home;

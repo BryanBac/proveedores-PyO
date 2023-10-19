@@ -11,8 +11,9 @@ import ModalPopUp from '@/components/popup/popup'
 import ModalPedidoEmpleado from '@/components/popup/modalPedidoEmpleado'
 import ColorIdentifier from '@/components/colorIndentifier'
 import InactivityAlert2 from '@/components/InactivityEmployee'
+import MiniDrawer from '../menuV2'
 
-export default function Pedidos() {
+const Pedidos = () => {
     const itemsPerPage = 6; // Number of items to display per page
     const [list, setList] = useState([]); // Your list of objects
     const [currentPage, setCurrentPage] = useState(1); // Current page number
@@ -41,8 +42,8 @@ export default function Pedidos() {
         fetchData();
     }, [presionado]);
 
-    useEffect(()=>{
-        if(recargar){
+    useEffect(() => {
+        if (recargar) {
             // router.reload()
         }
     }, [recargar])
@@ -53,11 +54,17 @@ export default function Pedidos() {
                 if (sessionStorage.getItem("acceso") !== "true") {
                     router.push('/');
                 }
+                if (sessionStorage.getItem("tipo") == "1") {
+                    router.replace('/fabrica/inicio');
+                } else if (sessionStorage.getItem("tipo") == "3") {
+                    router.replace('/minoristas/minorista-inicio');
+                }else{
+                }
             } catch (error) {
-                router.push('/');
+                console.error(error)
             }
         }
-    }, [router]);
+    }, [])
 
     // Calculate the range of items to display based on the current page
     let startIndex = (currentPage - 1) * itemsPerPage;
@@ -90,36 +97,38 @@ export default function Pedidos() {
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <div className={styles.inicio}>
-                <HomeBar enlace="mayorista-minorista"></HomeBar>
-                <ColorIdentifier></ColorIdentifier>
-                <div className={styles.contenido}>
-                    <ArrowBack currentPage={currentPage} setCurrentPage={setCurrentPage}></ArrowBack>
-                    <ModalPopUp
-                        openPopUp={openPopUp}
-                        setOpenPopUp={setOpenPopUp}
-                    >
-                        <ModalPedidoEmpleado estamosEn={"mayorista-fabrica"} recargar={recargar} setRecargar={setRecargar} data={dataPresionada} data2={dataPresionada} tipo={true} presionado={presionado} setPresionado={setPresionado} aceptar={true}></ModalPedidoEmpleado>
-                    </ModalPopUp>
-                    <InactivityAlert2 />
-                    <div className={styles.tarjetas}>
-                        {currentItems.map((item) => {
-                            if (dt.length > 0) {
-                                if (dt[dt.length - 1]['id'] == item.id) {
-                                    return (<Pedido data={item} key={item.id} setOpenPopUp={setOpenPopUp} setDataPresionada={setDataPresionada} setColor={'azul'} ></Pedido>)
+            <MiniDrawer>
+                <div className={styles.inicio}>
+                    <ColorIdentifier></ColorIdentifier>
+                    <div className={styles.contenido}>
+                        <ArrowBack currentPage={currentPage} setCurrentPage={setCurrentPage}></ArrowBack>
+                        <ModalPopUp
+                            openPopUp={openPopUp}
+                            setOpenPopUp={setOpenPopUp}
+                        >
+                            <ModalPedidoEmpleado estamosEn={"mayorista-fabrica"} recargar={recargar} setRecargar={setRecargar} data={dataPresionada} data2={dataPresionada} tipo={true} presionado={presionado} setPresionado={setPresionado} aceptar={true}></ModalPedidoEmpleado>
+                        </ModalPopUp>
+                        <InactivityAlert2 />
+                        <div className={styles.tarjetas}>
+                            {currentItems.map((item) => {
+                                if (dt.length > 0) {
+                                    if (dt[dt.length - 1]['id'] == item.id) {
+                                        return (<Pedido data={item} key={item.id} setOpenPopUp={setOpenPopUp} setDataPresionada={setDataPresionada} setColor={'azul'} ></Pedido>)
+                                    }
+                                    else if (dt[0]['id'] == item.id) {
+                                        return (<Pedido data={item} key={item.id} setOpenPopUp={setOpenPopUp} setDataPresionada={setDataPresionada} setColor={'rojo'} ></Pedido>)
+                                    }
+                                    else {
+                                        return (<Pedido data={item} key={item.id} setOpenPopUp={setOpenPopUp} setDataPresionada={setDataPresionada}></Pedido>)
+                                    }
                                 }
-                                else if (dt[0]['id'] == item.id) {
-                                    return (<Pedido data={item} key={item.id} setOpenPopUp={setOpenPopUp} setDataPresionada={setDataPresionada} setColor={'rojo'} ></Pedido>)
-                                }
-                                else {
-                                    return (<Pedido data={item} key={item.id} setOpenPopUp={setOpenPopUp} setDataPresionada={setDataPresionada}></Pedido>)
-                                }
-                            }
-                        })}
+                            })}
+                        </div>
+                        <ArrowForward endIndex={endIndex} tamañoLista={dt.length} currentPage={currentPage} setCurrentPage={setCurrentPage}></ArrowForward>
                     </div>
-                    <ArrowForward endIndex={endIndex} tamañoLista={dt.length} currentPage={currentPage} setCurrentPage={setCurrentPage}></ArrowForward>
                 </div>
-            </div>
+            </MiniDrawer>
         </>
     )
 }
+export default Pedidos;

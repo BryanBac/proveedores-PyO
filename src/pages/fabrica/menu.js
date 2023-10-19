@@ -18,8 +18,8 @@ const Home = () => {
         if (sessionStorage.getItem("acceso") !== "true") {
           router.push('/');
         }
-        if (sessionStorage.getItem("tipo") == "1") {
-          router.replace('/fabrica/inicio');
+        if (sessionStorage.getItem("tipo") == "2") {
+          router.replace('/mayorista/mayorista-inicio');
         } else if (sessionStorage.getItem("tipo") == "3") {
           router.replace('/minoristas/minorista-inicio');
         }else{
@@ -49,16 +49,28 @@ const Home = () => {
               <span className={styles.texto}>Finanzas</span>
             </button>
           </Link>
-          <Link href="/pedidosMenu">
+          <Link href="/fabrica/crearProducto">
             <button className={styles.boton}>
               <Image
-                src="/../public/lista.png"
+                src="/../public/plato.png"
                 width={512}
                 height={512}
                 className={styles.imagen}
                 alt="/imagen no encontrada"
               />
-              <span className={styles.texto}>Orden</span>
+              <span className={styles.texto}>Productos</span>
+            </button>
+          </Link>
+          <Link href="/fabrica/inventario">
+            <button className={styles.boton}>
+              <Image
+                src="/../public/caja.png"
+                width={512}
+                height={512}
+                className={styles.imagen}
+                alt="/imagen no encontrada"
+              />
+              <span className={styles.texto}>Inventario</span>
             </button>
           </Link>
         </div>
@@ -66,4 +78,4 @@ const Home = () => {
     </div>
   );
 }
-export default Home;
+export default Home

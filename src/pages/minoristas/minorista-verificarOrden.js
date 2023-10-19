@@ -6,6 +6,8 @@ import ArrowBack from '@/components/arrow_back'
 import ArrowForward from '@/components/arrow_forward'
 import PlatilloConfirmar from '@/components/platilloConfirmar'
 import Link from 'next/link'
+import { getFirestore, collection, getDocs, addDoc } from 'firebase/firestore'
+import app from '../../../firebase'
 import enviar from '../api/firebase/post-data'
 import obtener from '../api/firebase/get-data'
 import modificarDocumento from '../api/firebase/update-data'
@@ -13,6 +15,8 @@ import Loader from '@/components/loader'
 import { useRouter } from 'next/router'
 import InactivityAlert2 from '@/components/InactivityEmployee'
 import MiniDrawer from '../menuV2'
+
+const firestore = getFirestore(app);
 
 function sumAndMergeDuplicates(inputList) {
     const idMap = new Map();
@@ -86,13 +90,7 @@ function filtrarPorCantidadLocal(objetos) {
 const VerificarOrden = () => {
     const itemsPerPage = 4; // Number of items to display per page
     const [total, setTotal] = useState(0);
-    const [efectivo, setEfectivo] = useState(() => {
-        if (typeof window !== 'undefined' && window.sessionStorage) {
-            return sessionStorage.getItem('usuario');
-        } else {
-            return ""
-        }
-    })
+    const [efectivo, setEfectivo] = useState()
     const [vuelto, setVuelto] = useState(0)
     const [currentDateTime, setCurrentDateTime] = useState('');
     const [loading, setLoading] = useState(true);
@@ -120,8 +118,8 @@ const VerificarOrden = () => {
                 }
                 if (sessionStorage.getItem("tipo") == "1") {
                     router.replace('/fabrica/inicio');
-                } else if (sessionStorage.getItem("tipo") == "3") {
-                    router.replace('/minoristas/minorista-inicio');
+                } else if (sessionStorage.getItem("tipo") == "2") {
+                    router.replace('/mayorista/mayorista-inicio');
                 }else{
                 }
             } catch (error) {
@@ -158,7 +156,7 @@ const VerificarOrden = () => {
     // Así es como obtendo data
     const fetchData = async () => {
         try {
-            const result = await obtener("contadorFabrica");
+            const result = await obtener("contador");
             setContador(result);
         } catch (error) {
             // Handle the error if needed
@@ -253,12 +251,10 @@ const VerificarOrden = () => {
                 fecha: currentDateTime,
                 estado: estado,
                 hora: obtenerHoraActual(),
-                matActualizar: matActualizar,
-                mayorista: sessionStorage.getItem("usuario"),
-                minorista: ""
+                matActualizar: matActualizar
             }
-            enviar("pedidosFabrica", pedidos)
-            modificarDocumento(contador[0].id, "contadorFabrica", {
+            enviar("pedidos", pedidos)
+            modificarDocumento(contador[0].id, "contador", {
                 actual: contador[0].actual + 1,
             })
             sessionStorage.setItem('ordenList', JSON.stringify([]));
@@ -307,9 +303,22 @@ const VerificarOrden = () => {
                                     Total: <div className={styles.cajaTotales}>{total}</div>
                                 </div>
                                 <div className={styles.elementoTotales}>
-                                    Nombre de Mayorista: <input className={styles.cajaTotales} type="text" value={efectivo} onChange={(event) => {
-                                        setEfectivo(event.target.value)
+                                    Efectivo: <input className={styles.cajaTotales} type="number" value={efectivo} onChange={(event) => {
+                                        let efec = Number(event.target.value);
+                                        if (efec != 0) {
+                                            setEfectivo(Number(event.target.value))
+                                            let v = Number(event.target.value) - total
+                                            setVuelto(v)
+                                        }
+                                        else {
+                                            setEfectivo()
+                                            setVuelto(0)
+                                        }
+
                                     }}></input>
+                                </div>
+                                <div className={styles.elementoTotales}>
+                                    Vuelto: <div className={styles.cajaTotales}>{vuelto}</div>
                                 </div>
                             </div>
                             <div className={styles.grilla}>
@@ -323,7 +332,7 @@ const VerificarOrden = () => {
                                 </div>
                             </div>
                             <div className={styles.centrarHorizontal}>
-                                <Link className={styles.boton} href={"/ordenar"}>
+                                <Link className={styles.boton} href={"/minoristas/minorista-ordenar"}>
                                     Regresar
                                 </Link>
                                 <button className={styles.boton} onClick={() => {

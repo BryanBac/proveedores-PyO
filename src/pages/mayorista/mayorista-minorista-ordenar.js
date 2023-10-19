@@ -8,6 +8,7 @@ import Platillo from '@/components/platillo'
 import Link from 'next/link'
 import InactivityAlert2 from '@/components/InactivityEmployee'
 import { useRouter } from 'next/router'
+import MiniDrawer from '../menuV2'
 
 function eliminarDuplicados(lista) {
     const listaSinDuplicados = [];
@@ -30,7 +31,7 @@ function eliminarDuplicados(lista) {
     return listaSinDuplicados;
 }
 
-export default function Pedidos() {
+const Pedidos = () => {
     const router = useRouter()
     const [total, setTotal] = useState(0)
     const [tamL, setTamL] = useState(0)
@@ -67,11 +68,17 @@ export default function Pedidos() {
                 if (sessionStorage.getItem("acceso") !== "true") {
                     router.push('/');
                 }
+                if (sessionStorage.getItem("tipo") == "1") {
+                    router.replace('/fabrica/inicio');
+                } else if (sessionStorage.getItem("tipo") == "3") {
+                    router.replace('/minoristas/minorista-inicio');
+                }else{
+                }
             } catch (error) {
-                router.push('/');
+                console.error(error)
             }
         }
-    }, [router]);
+    }, [])
     useEffect(() => {
         if (actualizar) {
             let valor = 0;
@@ -118,7 +125,7 @@ export default function Pedidos() {
                     orden.push(objeto)
                 }
                 contador += 1
-            } else{
+            } else {
                 const objeto = {
                     id: contador,
                     imagen: list[i].imagen,
@@ -158,30 +165,32 @@ export default function Pedidos() {
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <div className={styles.inicio}>
-                <HomeBar enlace="mayorista-minorista"></HomeBar>
-                <InactivityAlert2 />
-                <div className={styles.contenido}>
-                    <ArrowBack currentPage={currentPage} setCurrentPage={setCurrentPage}></ArrowBack>
-                    <div className={styles.contenidoContainer}>
-                        <div className={styles.totales}>
-                            <div className={styles.elementoTotales}>
-                                <div> Total: </div>
-                                <div className={styles.cajaTotales}>{total}</div>
+            <MiniDrawer>
+                <div className={styles.inicio}>
+                    <InactivityAlert2 />
+                    <div className={styles.contenido}>
+                        <ArrowBack currentPage={currentPage} setCurrentPage={setCurrentPage}></ArrowBack>
+                        <div className={styles.contenidoContainer}>
+                            <div className={styles.totales}>
+                                <div className={styles.elementoTotales}>
+                                    <div> Total: </div>
+                                    <div className={styles.cajaTotales}>{total}</div>
+                                </div>
                             </div>
+                            <div className={styles.tarjetas}>
+                                {currentItems.map((item) => {
+                                    return (<Platillo setListOrden={setListOrden} listO={listOrden} data={item} key={item.id} list={list} setList={setList} setActualizar={setActualizar}></Platillo>)
+                                })}
+                            </div>
+                            <div className={styles.centrarHorizontal}><button className={styles.boton} onClick={() => {
+                                setear()
+                            }}>Siguiente</button></div>
                         </div>
-                        <div className={styles.tarjetas}>
-                            {currentItems.map((item) => {
-                                return (<Platillo setListOrden={setListOrden} listO={listOrden} data={item} key={item.id} list={list} setList={setList} setActualizar={setActualizar}></Platillo>)
-                            })}
-                        </div>
-                        <div className={styles.centrarHorizontal}><button className={styles.boton} onClick={() => {
-                            setear()
-                        }}>Siguiente</button></div>
+                        <ArrowForward endIndex={endIndex} tamañoLista={tamL} currentPage={currentPage} setCurrentPage={setCurrentPage}></ArrowForward>
                     </div>
-                    <ArrowForward endIndex={endIndex} tamañoLista={tamL} currentPage={currentPage} setCurrentPage={setCurrentPage}></ArrowForward>
                 </div>
-            </div>
+            </MiniDrawer>
         </>
     )
 }
+export default Pedidos;

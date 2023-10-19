@@ -30,7 +30,7 @@ const Pedidos = () => {
     // Así es como obtendo data
     const fetchData = async () => {
         try {
-            const result = await obtener("pedidosFabrica");
+            const result = await obtener("pedidos");
             let listaOrdenada = result.sort((a, b) => a.contador - b.contador);
             setData(listaOrdenada);
         } catch (error) {
@@ -56,8 +56,8 @@ const Pedidos = () => {
                 }
                 if (sessionStorage.getItem("tipo") == "1") {
                     router.replace('/fabrica/inicio');
-                } else if (sessionStorage.getItem("tipo") == "3") {
-                    router.replace('/minoristas/minorista-inicio');
+                } else if (sessionStorage.getItem("tipo") == "2") {
+                    router.replace('/mayorista/mayorista-inicio');
                 }else{
                 }
             } catch (error) {
@@ -106,7 +106,7 @@ const Pedidos = () => {
                             openPopUp={openPopUp}
                             setOpenPopUp={setOpenPopUp}
                         >
-                            <ModalPedidoEmpleado estamosEn={"mayorista-fabrica"} recargar={recargar} setRecargar={setRecargar} data={dataPresionada} data2={dataPresionada} tipo={true} presionado={presionado} setPresionado={setPresionado} aceptar={true}></ModalPedidoEmpleado>
+                            <ModalPedidoEmpleado recargar={recargar} setRecargar={setRecargar} data={dataPresionada} tipo={true} presionado={presionado} setPresionado={setPresionado}></ModalPedidoEmpleado>
                         </ModalPopUp>
                         <InactivityAlert2 />
                         <div className={styles.tarjetas}>
