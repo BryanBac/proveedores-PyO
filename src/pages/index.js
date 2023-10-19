@@ -1,13 +1,17 @@
 import { Inter } from "next/font/google";
 import { useEffect, useState } from "react";
 import Head from "next/head";
-import HomeBar from "@/components/home_bar";
 import styles from "../styles/login.module.css";
 const InterFont = Inter({ subsets: ["latin"] });
 import autenticar from "./api/auth/auth";
 import { useRouter } from "next/router";
 import ErrorModal from "@/components/popup/modalError";
 import ModalPopUp from "@/components/popup/popup";
+import VisibilityIcon from "@/components/icons/VisibilityIcon";
+import InvisibilityIcon from "@/components/icons/InvisibilityIcon";
+import Image from "next/image";
+import welcome from "public/welcome.png"
+import PersonIcon from '@mui/icons-material/Person';
 
 export default function Home() {
     const [usuario, setUsuario] = useState("");
@@ -33,7 +37,7 @@ export default function Home() {
             try {
                 if (sessionStorage.getItem("acceso") === "true") {
                     if (sessionStorage.getItem("tipo") === "1") {
-                        router.push('/menu');
+                        router.push('/menuV2');
                     }else{
                         router.push('/inicio');
                     }
@@ -48,16 +52,20 @@ export default function Home() {
         if (paso === true) {
             sessionStorage.setItem("acceso", true);
             sessionStorage.setItem("usuario", usuario);
-            router.push("/menu")
+            router.push("/menuV2")
         }
     }, [paso])
-
+    let [show, setShow] = useState(false)
+    let [state, setState] = useState(false)
+    const handleClick = () =>{
+        setState(!state)
+        setShow(!show)
+      }
     return (
         <div className={InterFont.className}>
             <Head>
                 <title>Iniciar Sesión</title>
             </Head>
-            <HomeBar enlace="menu"></HomeBar>
             <ModalPopUp
                 openPopUp={errorModal}
                 setOpenPopUp={setErrorModal}
@@ -65,28 +73,53 @@ export default function Home() {
                 <ErrorModal></ErrorModal>
             </ModalPopUp>
             <div className={styles.body}>
-                <form className={styles.container} onSubmit={enviarInfo}>
-                    <div className={styles.ingreso}>
-                        <span>Usuario:</span>
-                        <input
-                            className={styles.input}
-                            onChange={(e) => setUsuario(e.target.value)}
-                            value={usuario}
-                        ></input>
+                <form className={styles.layout} onSubmit={enviarInfo}>
+                    <div className={styles.seccion1}>
+                        <Image src ={welcome} width={250} height={400} alt="welcome"/>
                     </div>
-                    <div className={styles.ingreso}>
-                        <span>Contraseña:</span>
-                        <input
+                    <div className={styles.seccion2}>
+                        <div className={styles.presentacion}>
+                            <div className={styles.saludo}>
+                                Bienvenido<span>&#160;</span>
+                            </div>
+                        </div>
+                        <div className={styles.ingreso}>
+                            <label>Usuario</label>
+                            <input
+                                className={styles.input}
+                                onChange={(e) => setUsuario(e.target.value)}
+                                value={usuario}
+                            ></input>
+                            <div>
+                                <div className={styles.icono}><PersonIcon/></div>
+                            </div>
+                        </div>
+                        <div className={styles.ingreso}>
+                            <label>Contraseña</label>
+                            <input 
                             className={styles.input}
-                            type="password"
+                            type={show ? "text" : "password"}
                             onChange={(e) => setContra(e.target.value)}
                             value={contra}
-                        ></input>
+                            />
+                            <div onClick={handleClick}>
+                                { 
+                                state ? <div className={styles.icono}><VisibilityIcon/></div> 
+                                : 
+                                <div className={styles.icono}><InvisibilityIcon/></div>
+                                }
+                            </div>
+                        </div>
+                        <div>
+                            <button className={styles.boton} type="submit">
+                                Iniciar Sesión
+                            </button>
+                            <div>
+                                {paraVer === "3" && <p className={styles.error}>Usuario o Contraseña Incorrecta</p>}
+                                {paraVer !== "3" && <p className={styles.aux}>Texto</p>}
+                            </div>
+                        </div>
                     </div>
-                    <button className={styles.boton} type="submit">
-                        Iniciar Sesión
-                    </button>
-                    {paraVer == "3" && <div className={styles.error}>Usuario o Contraseña Incorrecta</div>}
                 </form>
             </div>
         </div>

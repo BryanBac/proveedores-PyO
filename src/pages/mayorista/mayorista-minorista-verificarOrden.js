@@ -6,16 +6,13 @@ import ArrowBack from '@/components/arrow_back'
 import ArrowForward from '@/components/arrow_forward'
 import PlatilloConfirmar from '@/components/platilloConfirmar'
 import Link from 'next/link'
-import { getFirestore, collection, getDocs, addDoc } from 'firebase/firestore'
-import app from '../../firebase'
-import enviar from './api/firebase/post-data'
-import obtener from './api/firebase/get-data'
-import modificarDocumento from './api/firebase/update-data'
+import enviar from '../api/firebase/post-data'
+import obtener from '../api/firebase/get-data'
+import modificarDocumento from '../api/firebase/update-data'
 import Loader from '@/components/loader'
 import { useRouter } from 'next/router'
 import InactivityAlert2 from '@/components/InactivityEmployee'
-
-const firestore = getFirestore(app);
+import MiniDrawer from '../menuV2'
 
 function sumAndMergeDuplicates(inputList) {
     const idMap = new Map();
@@ -86,7 +83,7 @@ function filtrarPorCantidadLocal(objetos) {
     return objetos.filter(objeto => objeto.cantidadLocal > 0);
 }
 
-export default function VerificarOrden() {
+const VerificarOrden = () => {
     const itemsPerPage = 4; // Number of items to display per page
     const [total, setTotal] = useState(0);
     const [efectivo, setEfectivo] = useState("")
@@ -115,11 +112,17 @@ export default function VerificarOrden() {
                 if (sessionStorage.getItem("acceso") !== "true") {
                     router.push('/');
                 }
+                if (sessionStorage.getItem("tipo") == "1") {
+                    router.replace('/fabrica/inicio');
+                } else if (sessionStorage.getItem("tipo") == "3") {
+                    router.replace('/minoristas/minorista-inicio');
+                }else{
+                }
             } catch (error) {
-                router.push('/');
+                console.error(error)
             }
         }
-    }, [router]);
+    }, [])
     const redireccionar = () => {
         router.push('/');
     };
@@ -149,7 +152,7 @@ export default function VerificarOrden() {
     // Así es como obtendo data
     const fetchData = async () => {
         try {
-            const result = await obtener("contador");
+            const result = await obtener("contadorMayorista");
             setContador(result);
         } catch (error) {
             // Handle the error if needed
@@ -244,10 +247,12 @@ export default function VerificarOrden() {
                 fecha: currentDateTime,
                 estado: estado,
                 hora: obtenerHoraActual(),
-                matActualizar: matActualizar
+                matActualizar: matActualizar,
+                mayorista: "",
+                minorista: efectivo
             }
-            enviar("pedidos", pedidos)
-            modificarDocumento(contador[0].id, "contador", {
+            enviar("pedidosMayorista", pedidos)
+            modificarDocumento(contador[0].id, "contadorMayorista", {
                 actual: contador[0].actual + 1,
             })
             sessionStorage.setItem('ordenList', JSON.stringify([]));
@@ -286,43 +291,45 @@ export default function VerificarOrden() {
             </Head>
             {loading == true && <Loader></Loader>}
             <InactivityAlert2 />
-            <div className={styles.inicio}>
-                <HomeBar enlace="ordenar"></HomeBar>
-                <div className={styles.contenido}>
-                    <ArrowBack currentPage={currentPage} setCurrentPage={setCurrentPage}></ArrowBack>
-                    <div className={styles.contenidoContainer}>
-                        <div className={styles.totales}>
-                            <div className={styles.elementoTotales}>
-                                Total: <div className={styles.cajaTotales}>{total}</div>
+            <MiniDrawer>
+                <div className={styles.inicio}>
+                    <div className={styles.contenido}>
+                        <ArrowBack currentPage={currentPage} setCurrentPage={setCurrentPage}></ArrowBack>
+                        <div className={styles.contenidoContainer}>
+                            <div className={styles.totales}>
+                                <div className={styles.elementoTotales}>
+                                    Total: <div className={styles.cajaTotales}>{total}</div>
+                                </div>
+                                <div className={styles.elementoTotales}>
+                                    Nombre de Minorista: <input className={styles.cajaTotales} type="text" value={efectivo} onChange={(event) => {
+                                        setEfectivo(event.target.value)
+                                    }}></input>
+                                </div>
                             </div>
-                            <div className={styles.elementoTotales}>
-                                Nombre: <input className={styles.cajaTotales} type="text" value={efectivo} onChange={(event) => {
-                                   setEfectivo(event.target.value)
-                                }}></input>
+                            <div className={styles.grilla}>
+                                <div className={styles.tarjetas}>
+                                    {currentItems.map((item) => {
+                                        return (<PlatilloConfirmar data={item} key={item.id} list={list} setList={setList}></PlatilloConfirmar>)
+                                    })}
+                                </div>
+                                <div className={styles.fraccion}>
+                                    <div className={styles.letras}>{currentPage} / {denominador}</div>
+                                </div>
+                            </div>
+                            <div className={styles.centrarHorizontal}>
+                                <Link className={styles.boton} href={"/ordenar"}>
+                                    Regresar
+                                </Link>
+                                <button className={styles.boton} onClick={() => {
+                                    fetchData()
+                                }}>Confirmar</button>
                             </div>
                         </div>
-                        <div className={styles.grilla}>
-                            <div className={styles.tarjetas}>
-                                {currentItems.map((item) => {
-                                    return (<PlatilloConfirmar data={item} key={item.id} list={list} setList={setList}></PlatilloConfirmar>)
-                                })}
-                            </div>
-                            <div className={styles.fraccion}>
-                                <div className={styles.letras}>{currentPage} / {denominador}</div>
-                            </div>
-                        </div>
-                        <div className={styles.centrarHorizontal}>
-                            <Link className={styles.boton} href={"/ordenar"}>
-                                Regresar
-                            </Link>
-                            <button className={styles.boton} onClick={() => {
-                                fetchData()
-                            }}>Confirmar</button>
-                        </div>
+                        <ArrowForward endIndex={endIndex} tamañoLista={list.length} currentPage={currentPage} setCurrentPage={setCurrentPage}></ArrowForward>
                     </div>
-                    <ArrowForward endIndex={endIndex} tamañoLista={list.length} currentPage={currentPage} setCurrentPage={setCurrentPage}></ArrowForward>
                 </div>
-            </div>
+            </MiniDrawer>
         </>
     )
 }
+export default VerificarOrden;

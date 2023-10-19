@@ -1,11 +1,13 @@
+import Head from 'next/head'
 import styles from '@/styles/Ordenar.module.css'
+import HomeBar from '@/components/home_bar'
 import { useEffect, useState } from 'react'
 import ArrowBack from '@/components/arrow_back'
 import ArrowForward from '@/components/arrow_forward'
 import Platillo from '@/components/platillo'
 import InactivityAlert2 from '@/components/InactivityEmployee'
 import { useRouter } from 'next/router'
-import Head from 'next/head'
+import MiniDrawer from '../menuV2'
 
 function eliminarDuplicados(lista) {
     const listaSinDuplicados = [];
@@ -28,28 +30,18 @@ function eliminarDuplicados(lista) {
     return listaSinDuplicados;
 }
 
-const Ordenar = () => {
+const Pedidos = () => {
     const router = useRouter()
     const [total, setTotal] = useState(0)
     const [tamL, setTamL] = useState(0)
     const [actualizar, setActualizar] = useState(false)
     const itemsPerPage = 4; // Number of items to display per page
 
-    const nombresAQuitar = [
-        "Granizada 1 Ingrediente",
-        "Granizada 2 Ingredientes",
-        "Granizada 3 Ingredientes",
-        "Granizada 4 Ingredientes",
-        "Granizada Mango Limon",
-        "Extra"
-    ];
-
     const [list, setList] = useState(() => {
         if (typeof window !== 'undefined' && window.sessionStorage) {
             const storedList = sessionStorage.getItem('platilloList');
             let listaPreOrden = JSON.parse(storedList)
-            const listaFiltrada = listaPreOrden.filter((objeto) => !nombresAQuitar.includes(objeto.nombre));
-            return listaFiltrada
+            return listaPreOrden
         } else {
             return []
         }
@@ -75,11 +67,17 @@ const Ordenar = () => {
                 if (sessionStorage.getItem("acceso") !== "true") {
                     router.push('/');
                 }
+                if (sessionStorage.getItem("tipo") == "1") {
+                    router.replace('/fabrica/inicio');
+                } else if (sessionStorage.getItem("tipo") == "3") {
+                    router.replace('/minoristas/minorista-inicio');
+                }else{
+                }
             } catch (error) {
-                router.push('/');
+                console.error(error)
             }
         }
-    }, [router]);
+    }, [])
     useEffect(() => {
         if (actualizar) {
             let valor = 0;
@@ -126,7 +124,7 @@ const Ordenar = () => {
                     orden.push(objeto)
                 }
                 contador += 1
-            } else{
+            } else {
                 const objeto = {
                     id: contador,
                     imagen: list[i].imagen,
@@ -147,46 +145,8 @@ const Ordenar = () => {
             alert('No se han ingresado productos')
         }
         else {
-            router.push("/verificarOrden")
+            router.push("mayorista-fabrica-verificarOrden")
         }
-    }
-    const setear2 = () => {
-        let orden = listOrden;
-        console.log("LOrden", listOrden)
-        let contador = 1;
-        let nuevaO= []
-        for (let i = 0; i < list.length; i++) {
-            if (list[i].cantidadLocal != 0) {
-                const objeto = {
-                    id: contador,
-                    imagen: list[i].imagen,
-                    precio: list[i].precio,
-                    cantidadLocal: list[i].cantidadLocal,
-                    nombre: list[i].nombre,
-                    ingredientes: list[i].ingredientes,
-                    contador: list[i].contador
-                }
-                if (!modificarCantidadLocal(orden, list[i].nombre, list[i].cantidadLocal)) {
-                    orden.push(objeto)
-                }
-                contador += 1
-            } else{
-                const objeto = {
-                    id: contador,
-                    imagen: list[i].imagen,
-                    precio: list[i].precio,
-                    cantidadLocal: list[i].cantidadLocal,
-                    nombre: list[i].nombre,
-                    ingredientes: list[i].ingredientes,
-                    contador: list[i].contador
-                }
-                orden.push(objeto)
-                contador += 1
-            }
-        }
-        console.log("orden", typeof orden)
-        sessionStorage.setItem('ordenList', JSON.stringify(orden));
-        router.push("/ordenarGranizadas")
     }
     useEffect(() => {
         if (list) {
@@ -204,34 +164,32 @@ const Ordenar = () => {
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <div className={styles.inicio}>
-                <InactivityAlert2 />
-                <div className={styles.contenido}>
-                    <ArrowBack currentPage={currentPage} setCurrentPage={setCurrentPage}></ArrowBack>
-                    <div className={styles.contenidoContainer}>
-                        <div className={styles.totales}>
-                            <div className={styles.elementoTotales}>
-                                <div> Total: </div>
-                                <div className={styles.cajaTotales}>{total}</div>
+            <MiniDrawer>
+                <div className={styles.inicio}>
+                    <InactivityAlert2 />
+                    <div className={styles.contenido}>
+                        <ArrowBack currentPage={currentPage} setCurrentPage={setCurrentPage}></ArrowBack>
+                        <div className={styles.contenidoContainer}>
+                            <div className={styles.totales}>
+                                <div className={styles.elementoTotales}>
+                                    <div> Total: </div>
+                                    <div className={styles.cajaTotales}>{total}</div>
+                                </div>
                             </div>
+                            <div className={styles.tarjetas}>
+                                {currentItems.map((item) => {
+                                    return (<Platillo setListOrden={setListOrden} listO={listOrden} data={item} key={item.id} list={list} setList={setList} setActualizar={setActualizar}></Platillo>)
+                                })}
+                            </div>
+                            <div className={styles.centrarHorizontal}><button className={styles.boton} onClick={() => {
+                                setear()
+                            }}>Siguiente</button></div>
                         </div>
-                        <div className={styles.centrarHorizontal}><button className={styles.boton2} onClick={() => {
-                            setear2()
-                        }}><img className={styles.imagen} src="/Granizada.jpg" alt="/imagen no encontrada"></img></button></div>
-                        <div className={styles.tarjetas}>
-                            {currentItems.map((item) => {
-                                return (<Platillo setListOrden={setListOrden} listO={listOrden} data={item} key={item.id} list={list} setList={setList} setActualizar={setActualizar}></Platillo>)
-                            })}
-                        </div>
-                        <div className={styles.centrarHorizontal}><button className={styles.boton} onClick={() => {
-                            setear()
-                        }}>Siguiente</button></div>
+                        <ArrowForward endIndex={endIndex} tamañoLista={tamL} currentPage={currentPage} setCurrentPage={setCurrentPage}></ArrowForward>
                     </div>
-                    <ArrowForward endIndex={endIndex} tamañoLista={tamL} currentPage={currentPage} setCurrentPage={setCurrentPage}></ArrowForward>
                 </div>
-            </div>
+            </MiniDrawer>
         </>
     )
 }
-
-export default Ordenar
+export default Pedidos;

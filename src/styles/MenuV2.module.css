@@ -1,0 +1,16 @@
+.bar {
+    background-color: rgb(255, 187, 61);
+}
+
+.close {
+    color: black;
+}
+
+.icon {
+    background: white;
+    border: none;
+}
+
+.icon :hover {
+    background: transparent;
+}
