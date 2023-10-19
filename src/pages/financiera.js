@@ -33,6 +33,8 @@ export default function Financiera() {
     const [masaAyer, setMasaAyer] = useState(0)
     const [empanadasAyer, setEmpanadasAyer] = useState(0)
     const router = useRouter()
+    const [sinProductosAlerta, setSinProductosAlerta] = useState(false);
+
 
     const fetchEmpanada = async () => {
         try {
@@ -94,6 +96,15 @@ export default function Financiera() {
             console.error("Error fetching data:", error);
         }
     };
+
+    const verificarDisponibilidadProductos = () => {
+        if (productos.length === 0) {
+          setSinProductosAlerta(true);
+        } else {
+          setSinProductosAlerta(false);
+        }
+    };
+
     useEffect(() => {
         fetchData();
     }, [eliminado]);
@@ -149,7 +160,17 @@ export default function Financiera() {
         }
     }, [numEmpanadas]);
 
-
+    useEffect(() => {
+        obtener()
+          .then((productos) => {
+            setProductos(productos);
+            verificarDisponibilidadProductos();
+          })
+          .catch((error) => {
+            console.error("Error al obtener datos de productos:", error);
+          });
+    }, []);
+      
     return (
         <>
             <Head>
@@ -157,6 +178,14 @@ export default function Financiera() {
             </Head>
             <div className={styles.inicio}>
                 <HomeBar enlace="/menu"></HomeBar>
+
+                {/* Alerta para productos no disponibles */}
+                {sinProductosAlerta && (
+                    <div className="alerta">
+                        No hay productos disponibles en este momento.
+                    </div>
+                )}
+
                 <InactivityAlert />
                 <ModalPopUp
                     openPopUp={openPopUp}
@@ -178,22 +207,11 @@ export default function Financiera() {
                         <div className={styles.grid}>
                             {pestaña == "Pedidos" && <TablaOriginal data={data} total={total} setDataPresionada={setDataPresionada} setOpenPopUp={setOpenPopUp}></TablaOriginal>}
                             {pestaña == "Productos" && <TablaProductos fecha2={fecha} data={data}></TablaProductos>}
-                            <div className={styles.botones}>
-                                <button onClick={() => {
-                                    eliminarDiario()
-                                }} className={styles.boton}> Eliminar Diario</button>
-                                <button onClick={() => {
-                                    eliminarMes(pedidos, fecha)
-                                }} className={styles.boton}> Eliminar Mensual</button>
-                            </div>
+                            
                         </div>
                     </div>
                 </div>
-                <div className={styles.empanadaContainer}>
-                    <div className={styles.empanada}>
-                        <TablaEmpanada masaAyer={masaAyer} empanadasAyer={empanadasAyer} empanada={empanada} empanadasProducidas={empanadasProducidas}></TablaEmpanada>
-                    </div>
-                </div>
+                
             </div>
 
         </>
