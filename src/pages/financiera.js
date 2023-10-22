@@ -34,7 +34,7 @@ export default function Financiera() {
     const [empanadasAyer, setEmpanadasAyer] = useState(0)
     const router = useRouter()
     const [sinProductosAlerta, setSinProductosAlerta] = useState(false);
-
+    const [productos, setProductos] = useState([]); 
 
     const fetchEmpanada = async () => {
         try {
@@ -160,7 +160,7 @@ export default function Financiera() {
         }
     }, [numEmpanadas]);
 
-    useEffect(() => {
+    /*useEffect(() => {
         obtener()
           .then((productos) => {
             setProductos(productos);
@@ -169,6 +169,24 @@ export default function Financiera() {
           .catch((error) => {
             console.error("Error al obtener datos de productos:", error);
           });
+    }, []);*/
+
+    useEffect(() => {
+        // Temporalmente establecer productos en un estado vacío para simular la falta de productos
+        setProductos([]);
+        verificarDisponibilidadProductos(); // Verificar alerta
+    }, []);
+
+    useEffect(() => {
+        // Obtener datos
+        obtener()
+            .then((productos) => {
+                setProductos(productos);
+                verificarDisponibilidadProductos();
+            })
+            .catch((error) => {
+                console.error("Error al obtener datos de productos:", error);
+            });
     }, []);
       
     return (
@@ -181,7 +199,7 @@ export default function Financiera() {
 
                 {/* Alerta para productos no disponibles */}
                 {sinProductosAlerta && (
-                    <div className="alerta">
+                    <div className={styles.alerta}>
                         No hay productos disponibles en este momento.
                     </div>
                 )}
