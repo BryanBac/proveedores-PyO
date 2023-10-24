@@ -417,9 +417,9 @@ export default function MiniDrawer(props) {
     }
   }, [empCant, numEmpanadas])
 
-  useEffect(()=>{
+  useEffect(() => {
     console.log(usuario, typeof usuario)
-  },[usuario])
+  }, [usuario])
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
@@ -449,82 +449,104 @@ export default function MiniDrawer(props) {
           </IconButton>
         </DrawerHeader>
         <Divider />
-        {usuario == "0" && 
+        {usuario == "0" &&
           <>
             <List>
-            <ListItem key="Fabrica" disablePadding sx={{ display: 'block' }}>
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? 'initial' : 'center',
-                  px: 2.5,
-                }}
-              >
-                <ListItemIcon
+              <ListItem key="Fabrica" disablePadding sx={{ display: 'block' }}>
+                <ListItemButton
                   sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : 'auto',
-                    justifyContent: 'center',
+                    minHeight: 48,
+                    justifyContent: open ? 'initial' : 'center',
+                    px: 2.5,
                   }}
                 >
-                  <button className={styles.icon} onClick={() => {
-                    router.replace("/fabrica/inicio")
-                  }} ><AccountBoxOutlinedIcon /></button>
-                </ListItemIcon>
-                <ListItemText primary="Fabrica" sx={{ opacity: open ? 1 : 0 }} />
-              </ListItemButton>
-            </ListItem>
-          </List>
-          <Divider />
-          <List>
-            <ListItem key="Mayorista" disablePadding sx={{ display: 'block' }}>
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? 'initial' : 'center',
-                  px: 2.5,
-                }}
-              >
-                <ListItemIcon
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 3 : 'auto',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <button className={styles.icon} onClick={() => {
+                      router.replace("/fabrica/inicio")
+                    }} ><AccountBoxOutlinedIcon /></button>
+                  </ListItemIcon>
+                  <ListItemText primary="Fabrica: Pedidos" sx={{ opacity: open ? 1 : 0 }} />
+                </ListItemButton>
+              </ListItem>
+              <ListItem key="Fabrica" disablePadding sx={{ display: 'block' }}>
+                <ListItemButton
                   sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : 'auto',
-                    justifyContent: 'center',
+                    minHeight: 48,
+                    justifyContent: open ? 'initial' : 'center',
+                    px: 2.5,
                   }}
                 >
-                  <button className={styles.icon} onClick={() => {
-                    router.replace("/mayorista/mayorista-inicio")
-                  }} ><AccountBoxOutlinedIcon /></button>
-                </ListItemIcon>
-                <ListItemText primary="Mayorista" sx={{ opacity: open ? 1 : 0 }} />
-              </ListItemButton>
-            </ListItem>
-          </List>
-          <Divider />
-          <List>
-            <ListItem key="Minorista" disablePadding sx={{ display: 'block' }}>
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? 'initial' : 'center',
-                  px: 2.5,
-                }}
-              >
-                <ListItemIcon
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 3 : 'auto',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <button className={styles.icon} onClick={() => {
+                      router.replace("/fabrica/menu")
+                    }} ><AccountBoxOutlinedIcon /></button>
+                  </ListItemIcon>
+                  <ListItemText primary="Fabrica: Menú" sx={{ opacity: open ? 1 : 0 }} />
+                </ListItemButton>
+              </ListItem>
+            </List>
+            <Divider />
+            <List>
+              <ListItem key="Mayorista" disablePadding sx={{ display: 'block' }}>
+                <ListItemButton
                   sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : 'auto',
-                    justifyContent: 'center',
+                    minHeight: 48,
+                    justifyContent: open ? 'initial' : 'center',
+                    px: 2.5,
                   }}
                 >
-                  <button className={styles.icon} onClick={() => {
-                    router.replace("/minoristas/minorista-inicio")
-                  }} ><AccountBoxOutlinedIcon /></button>
-                </ListItemIcon>
-                <ListItemText primary="Minorista" sx={{ opacity: open ? 1 : 0 }} />
-              </ListItemButton>
-            </ListItem>
-          </List>
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 3 : 'auto',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <button className={styles.icon} onClick={() => {
+                      router.replace("/mayorista/mayorista-inicio")
+                    }} ><AccountBoxOutlinedIcon /></button>
+                  </ListItemIcon>
+                  <ListItemText primary="Mayorista" sx={{ opacity: open ? 1 : 0 }} />
+                </ListItemButton>
+              </ListItem>
+            </List>
+            <Divider />
+            <List>
+              <ListItem key="Minorista" disablePadding sx={{ display: 'block' }}>
+                <ListItemButton
+                  sx={{
+                    minHeight: 48,
+                    justifyContent: open ? 'initial' : 'center',
+                    px: 2.5,
+                  }}
+                >
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 3 : 'auto',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <button className={styles.icon} onClick={() => {
+                      router.replace("/minoristas/minorista-inicio")
+                    }} ><AccountBoxOutlinedIcon /></button>
+                  </ListItemIcon>
+                  <ListItemText primary="Minorista" sx={{ opacity: open ? 1 : 0 }} />
+                </ListItemButton>
+              </ListItem>
+            </List>
           </>
         }
         {usuario == "1" &&
@@ -548,7 +570,73 @@ export default function MiniDrawer(props) {
                     router.replace("/fabrica/inicio")
                   }} ><AccountBoxOutlinedIcon /></button>
                 </ListItemIcon>
-                <ListItemText primary="Fabrica" sx={{ opacity: open ? 1 : 0 }} />
+                <ListItemText primary="Pedidos" sx={{ opacity: open ? 1 : 0 }} />
+              </ListItemButton>
+            </ListItem>
+            <ListItem key="Fabrica" disablePadding sx={{ display: 'block' }}>
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? 'initial' : 'center',
+                  px: 2.5,
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : 'auto',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <button className={styles.icon} onClick={() => {
+                    router.replace("/fabrica/menu")
+                  }} ><AccountBoxOutlinedIcon /></button>
+                </ListItemIcon>
+                <ListItemText primary="Menú" sx={{ opacity: open ? 1 : 0 }} />
+              </ListItemButton>
+            </ListItem>
+            <ListItem key="Fabrica" disablePadding sx={{ display: 'block' }}>
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? 'initial' : 'center',
+                  px: 2.5,
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : 'auto',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <button className={styles.icon} onClick={() => {
+                    router.replace("/fabrica/pedidos")
+                  }} ><AccountBoxOutlinedIcon /></button>
+                </ListItemIcon>
+                <ListItemText primary="Pendientes" sx={{ opacity: open ? 1 : 0 }} />
+              </ListItemButton>
+            </ListItem>
+            <ListItem key="Fabrica" disablePadding sx={{ display: 'block' }}>
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? 'initial' : 'center',
+                  px: 2.5,
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : 'auto',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <button className={styles.icon} onClick={() => {
+                    router.replace("/fabrica/inventario")
+                  }} ><AccountBoxOutlinedIcon /></button>
+                </ListItemIcon>
+                <ListItemText primary="Inventario" sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
             </ListItem>
           </List>
