@@ -26,12 +26,16 @@ import AccountBoxOutlinedIcon from '@mui/icons-material/AccountBoxOutlined';
 import { Divider } from '@mui/material';
 import styles from "../styles/MenuV2.module.css";
 import { useRouter } from "next/router";
-import { AddShoppingCartOutlined } from '@mui/icons-material';
 import Link from 'next/link';
 import obtener from './api/firebase/get-data'
 import enviar from './api/firebase/post-data'
 import modificarDocumento from './api/firebase/update-data'
 import eliminarDocumento from './api/firebase/delete-data'
+import InventoryOutlinedIcon from '@mui/icons-material/InventoryOutlined';
+import WidgetsOutlinedIcon from '@mui/icons-material/WidgetsOutlined';
+import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
+import ShoppingCartCheckoutOutlinedIcon from '@mui/icons-material/ShoppingCartCheckoutOutlined';
+            
 
 const drawerWidth = 240;
 
@@ -395,7 +399,7 @@ export default function MiniDrawer(props) {
                   >
                     <button className={styles.icon} onClick={() => {
                       router.replace("/fabrica/inicio")
-                    }} ><AccountBoxOutlinedIcon /></button>
+                    }} ><ShoppingCartOutlinedIcon /></button>
                   </ListItemIcon>
                   <ListItemText primary="Fabrica: Pedidos" sx={{ opacity: open ? 1 : 0 }} />
                 </ListItemButton>
@@ -417,7 +421,7 @@ export default function MiniDrawer(props) {
                   >
                     <button className={styles.icon} onClick={() => {
                       router.replace("/fabrica/menu")
-                    }} ><AccountBoxOutlinedIcon /></button>
+                    }} ><WidgetsOutlinedIcon /></button>
                   </ListItemIcon>
                   <ListItemText primary="Fabrica: Menú" sx={{ opacity: open ? 1 : 0 }} />
                 </ListItemButton>
@@ -464,7 +468,7 @@ export default function MiniDrawer(props) {
                   >
                     <button className={styles.icon} onClick={() => {
                       router.replace("/mayorista/mayorista-productos")
-                    }} ><AccountBoxOutlinedIcon /></button>
+                    }} ><InventoryOutlinedIcon /></button>
                   </ListItemIcon>
                   <ListItemText primary="Mayorista: Productos" sx={{ opacity: open ? 1 : 0 }} />
                 </ListItemButton>
@@ -489,7 +493,7 @@ export default function MiniDrawer(props) {
                   >
                     <button className={styles.icon} onClick={() => {
                       router.replace("/minoristas/minorista-inicio")
-                    }} ><AccountBoxOutlinedIcon /></button>
+                    }} ><PeopleAltOutlinedIcon /></button>
                   </ListItemIcon>
                   <ListItemText primary="Minorista" sx={{ opacity: open ? 1 : 0 }} />
                 </ListItemButton>
@@ -511,7 +515,7 @@ export default function MiniDrawer(props) {
                   >
                     <button className={styles.icon} onClick={() => {
                       router.replace("/minoristas/minorista-productos")
-                    }} ><AccountBoxOutlinedIcon /></button>
+                    }} ><Inventory2OutlinedIcon /></button>
                   </ListItemIcon>
                   <ListItemText primary="Minorista: Productos" sx={{ opacity: open ? 1 : 0 }} />
                 </ListItemButton>
@@ -538,11 +542,11 @@ export default function MiniDrawer(props) {
                 >
                   <button className={styles.icon} onClick={() => {
                     router.replace("/fabrica/inicio")
-                  }} ><AccountBoxOutlinedIcon /></button>
+                  }} ><ShoppingCartCheckoutOutlinedIcon /></button>
                 </ListItemIcon>
                 <ListItemText primary="Pedidos" sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
-            </ListItem>
+              </ListItem>
             <ListItem key="Fabrica" disablePadding sx={{ display: 'block' }}>
               <ListItemButton
                 sx={{
@@ -560,7 +564,7 @@ export default function MiniDrawer(props) {
                 >
                   <button className={styles.icon} onClick={() => {
                     router.replace("/fabrica/menu")
-                  }} ><AccountBoxOutlinedIcon /></button>
+                  }} ><WidgetsOutlinedIcon /></button>
                 </ListItemIcon>
                 <ListItemText primary="Menú" sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
@@ -582,7 +586,7 @@ export default function MiniDrawer(props) {
                 >
                   <button className={styles.icon} onClick={() => {
                     router.replace("/fabrica/pedidos")
-                  }} ><AccountBoxOutlinedIcon /></button>
+                  }} ><ShoppingCartOutlinedIcon /></button>
                 </ListItemIcon>
                 <ListItemText primary="Pendientes" sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
@@ -604,7 +608,7 @@ export default function MiniDrawer(props) {
                 >
                   <button className={styles.icon} onClick={() => {
                     router.replace("/fabrica/inventario")
-                  }} ><AccountBoxOutlinedIcon /></button>
+                  }} ><InventoryOutlinedIcon /></button>
                 </ListItemIcon>
                 <ListItemText primary="Inventario" sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
@@ -652,7 +656,7 @@ export default function MiniDrawer(props) {
                 >
                   <button className={styles.icon} onClick={() => {
                     router.replace("/mayorista/mayorista-productos")
-                  }} ><AccountBoxOutlinedIcon /></button>
+                  }} ><InventoryOutlinedIcon /></button>
                 </ListItemIcon>
                 <ListItemText primary="Mayorista: Productos" sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
@@ -678,7 +682,7 @@ export default function MiniDrawer(props) {
                 >
                   <button className={styles.icon} onClick={() => {
                     router.replace("/minoristas/minorista-inicio")
-                  }} ><AccountBoxOutlinedIcon /></button>
+                  }} ><PeopleAltOutlinedIcon /></button>
                 </ListItemIcon>
                 <ListItemText primary="Minorista" sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
@@ -700,7 +704,7 @@ export default function MiniDrawer(props) {
                   >
                     <button className={styles.icon} onClick={() => {
                       router.replace("/minoristas/minorista-productos")
-                    }} ><AccountBoxOutlinedIcon /></button>
+                    }} ><Inventory2OutlinedIcon /></button>
                   </ListItemIcon>
                   <ListItemText primary="Minorista: Productos" sx={{ opacity: open ? 1 : 0 }} />
                 </ListItemButton>
@@ -727,7 +731,7 @@ export default function MiniDrawer(props) {
               >
                 <button className={styles.icon} onClick={() => {
                   router.replace("/financiera")
-                }} ><AccountBoxOutlinedIcon /></button>
+                }} ><AttachMoneyIcon/></button>
               </ListItemIcon>
               <ListItemText primary="Financiera" sx={{ opacity: open ? 1 : 0 }} />
             </ListItemButton>
