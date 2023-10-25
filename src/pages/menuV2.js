@@ -494,7 +494,7 @@ export default function MiniDrawer(props) {
                   <ListItemText primary="Minorista" sx={{ opacity: open ? 1 : 0 }} />
                 </ListItemButton>
               </ListItem>
-              <ListItem key="Minorista-Menu" disablePadding sx={{ display: 'block' }}>
+              <ListItem key="Minorista-Productos" disablePadding sx={{ display: 'block' }}>
                 <ListItemButton
                   sx={{
                     minHeight: 48,
@@ -510,10 +510,10 @@ export default function MiniDrawer(props) {
                     }}
                   >
                     <button className={styles.icon} onClick={() => {
-                      router.replace("/minoristas/minorista-menu")
+                      router.replace("/minoristas/minorista-productos")
                     }} ><AccountBoxOutlinedIcon /></button>
                   </ListItemIcon>
-                  <ListItemText primary="Minorista: Menu" sx={{ opacity: open ? 1 : 0 }} />
+                  <ListItemText primary="Minorista: Productos" sx={{ opacity: open ? 1 : 0 }} />
                 </ListItemButton>
               </ListItem>
             </List>
@@ -683,28 +683,28 @@ export default function MiniDrawer(props) {
                 <ListItemText primary="Minorista" sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
             </ListItem>
-            <ListItem key="Minorista-Menu" disablePadding sx={{ display: 'block' }}>
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? 'initial' : 'center',
-                  px: 2.5,
-                }}
-              >
-                <ListItemIcon
+            <ListItem key="Minorista-Productos" disablePadding sx={{ display: 'block' }}>
+                <ListItemButton
                   sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : 'auto',
-                    justifyContent: 'center',
+                    minHeight: 48,
+                    justifyContent: open ? 'initial' : 'center',
+                    px: 2.5,
                   }}
                 >
-                  <button className={styles.icon} onClick={() => {
-                    router.replace("/minoristas/minorista-menu")
-                  }} ><AccountBoxOutlinedIcon /></button>
-                </ListItemIcon>
-                <ListItemText primary="Minorista: Menu" sx={{ opacity: open ? 1 : 0 }} />
-              </ListItemButton>
-            </ListItem>
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 3 : 'auto',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <button className={styles.icon} onClick={() => {
+                      router.replace("/minoristas/minorista-productos")
+                    }} ><AccountBoxOutlinedIcon /></button>
+                  </ListItemIcon>
+                  <ListItemText primary="Minorista: Productos" sx={{ opacity: open ? 1 : 0 }} />
+                </ListItemButton>
+              </ListItem>
           </List>
 
         }
