@@ -52,7 +52,7 @@ const Home = () => {
           <Link href="/minoristas/minorista-productos">
             <button className={styles.boton}>
               <Image
-                src="/../public/plato.png"
+                src="/../public/inventario.png"
                 width={512}
                 height={512}
                 className={styles.imagen}

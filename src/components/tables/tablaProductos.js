@@ -11,34 +11,6 @@ import { useState, useEffect } from "react";
 
 
 export default function TablaProductos({ data, fecha2 }) {
-    const [listaProductos, setListaProductos] = useState([])
-    useEffect(() => {
-        if (data.length > 0) {
-            let listPedidos = listaProductos
-            const noFecha = listPedidos.find((item) => item.fecha !== data[0].fecha)
-            if (noFecha) {
-                listPedidos = []
-            }
-            for (let i = 0; i < data.length; i++) {
-                let fecha = data[i].fecha
-                for (let j = 0; j < data[i].pedido.length; j++) {
-                    const existing = listPedidos.find((item) => item.nombre === data[i].pedido[j].nombre)
-                    if (existing) {
-                        existing.cantidad = existing.cantidad + data[i].pedido[j].cantidadLocal
-                    } else {
-                        let nuevoObjeto = {
-                            nombre: data[i].pedido[j].nombre,
-                            cantidad: data[i].pedido[j].cantidadLocal,
-                            fecha: fecha
-                        }
-                        listPedidos.push(nuevoObjeto)
-                    }
-
-                }
-            }
-            setListaProductos(listPedidos)
-        }
-    }, [data])
     return (
         <>
             <div className="scroller">
@@ -53,18 +25,28 @@ export default function TablaProductos({ data, fecha2 }) {
                                 </TableCell>
                                 <TableCell>
                                     <div className={styles.celdaHead}>
-                                        Fecha
+                                        Existencia
                                     </div>
                                 </TableCell>
                                 <TableCell align="right">
                                     <div className={styles.celdaHead}>
-                                        Cantidad Vendida
+                                        Precio
+                                    </div>
+                                </TableCell>
+                                <TableCell align="right">
+                                    <div className={styles.celdaHead}>
+                                        Unidades
+                                    </div>
+                                </TableCell>
+                                <TableCell align="right">
+                                    <div className={styles.celdaHead}>
+                                        Estado
                                     </div>
                                 </TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {listaProductos.map((row) => (
+                            {data.map((row) => (
                                 <TableRow key={row.id} onClick={() => {
                                 }}>
                                     <TableCell align="right">
@@ -74,12 +56,23 @@ export default function TablaProductos({ data, fecha2 }) {
                                     </TableCell>
                                     <TableCell align="right">
                                         <div className={styles.celdaRow}>
-                                            {row.fecha}
+                                            {row.existencia}
                                         </div>
                                     </TableCell>
                                     <TableCell align="right">
                                         <div className={styles.celdaRow}>
-                                            {row.cantidad}
+                                            {row.precio}
+                                        </div>
+                                    </TableCell>
+                                    <TableCell align="right">
+                                        <div className={styles.celdaRow}>
+                                            {row.unidades}
+                                        </div>
+                                    </TableCell>
+                                    <TableCell align="right">
+                                        <div className={styles.celdaRow}>
+                                            {row.existencia<50 && <div className={styles.bajas}>Bajo</div>}
+                                            {row.existencia>50 && <div className={styles.normales}>Normal</div>}
                                         </div>
                                     </TableCell>
                                 </TableRow>
