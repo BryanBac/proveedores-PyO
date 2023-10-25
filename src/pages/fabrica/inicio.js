@@ -237,11 +237,11 @@ const Home = () => {
                     </ModalPopUp>
                     <InactivityAlert2 />
                     <div className={styles.container}>
-                        <Link className={styles.panel} href="#" onClick={() => setear()}>
+                        <Link className={styles.panel} href="/fabrica/pedidosCompletados" onClick={() => setear()}>
                             <div className={styles.primero}><img src="../list.png" className={styles.imagen} alt="/imagen no encontrada"></img></div>
                             <div className={styles.segundo}> <div className={styles.sin}>Pedidos Completados</div> </div>
                         </Link>
-                        <Link className={styles.panel} href="#">
+                        <Link className={styles.panel} href="/fabrica/pedidos">
                             <div className={styles.primero}><img src="../clock.png" className={styles.imagen} alt="/imagen no encontrada"></img></div>
                             <div className={styles.segundo}><div className={styles.sin}>Pedidos Pendientes</div> </div>
                         </Link>

@@ -24,8 +24,8 @@ const Home = () => {
                 }
                 if (sessionStorage.getItem("tipo") == "1") {
                     router.replace('/fabrica/inicio');
-                } else if (sessionStorage.getItem("tipo") == "2") {
-                    router.replace('/mayorista/mayorista-inicio');
+                } else if (sessionStorage.getItem("tipo") == "3") {
+                    router.replace('/minorista/minorista-inicio');
                 }else{
                 }
             } catch (error) {
@@ -41,7 +41,7 @@ const Home = () => {
 
     const fetchData = async () => {
         try {
-            const result = await obtener("productosMinorista");
+            const result = await obtener("productosMayorista");
             setMateriales(result);
             setTabla({
                 tableContent: result,
@@ -72,7 +72,7 @@ const Home = () => {
         setTabla({
             tableContent: nuevaTab,
         });
-        modificarDocumento(itemId, "productosMinorista", {
+        modificarDocumento(itemId, "productosMayorista", {
             precio: tabla.tableContent[ref]["precio"]
         })
     };
@@ -90,7 +90,7 @@ const Home = () => {
                     });
                 }
             }
-            await eliminarDocumento("productosMinorista", e.target.value)
+            await eliminarDocumento("productosMayorista", e.target.value)
             fetchData();
         }
     }
@@ -108,7 +108,7 @@ const Home = () => {
         const refImagen = ref(storage, `/${file.name + v4()}`);
         uploadBytes(refImagen, file).then((snapshot) => {
             getDownloadURL(snapshot.ref).then((url) => {
-                modificarDocumento(itemId, "productosMinorista", {
+                modificarDocumento(itemId, "productosMayorista", {
                     imagen: url
                 })
                 for (var i = 0; i < tabla.tableContent.length; i++) {
