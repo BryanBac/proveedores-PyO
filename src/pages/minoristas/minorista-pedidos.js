@@ -1,15 +1,17 @@
 import Head from 'next/head'
 import styles from '@/styles/Pedidos.module.css'
+import HomeBar from '@/components/home_bar'
 import { dataPedidos } from '@/components/mock_tarjetas'
 import Pedido from '@/components/tarjeta_orden'
 import { useEffect, useState } from 'react'
 import ArrowBack from '@/components/arrow_back'
 import ArrowForward from '@/components/arrow_forward'
-import obtener from './api/firebase/get-data'
+import obtener from '../api/firebase/get-data'
 import ModalPopUp from '@/components/popup/popup'
 import ModalPedido from '@/components/popup/modalPedido'
 import { useRouter } from "next/router";
 import ColorIdentifier from '@/components/colorIndentifier'
+import MiniDrawer from '../menuV2'
 
 const Pedidos = () => {
     const router = useRouter()
@@ -20,8 +22,11 @@ const Pedidos = () => {
                 if (sessionStorage.getItem("acceso") !== "true") {
                     router.push('/');
                 }
-                if (sessionStorage.getItem("tipo") !== "1") {
-                    router.push('/');
+                if (sessionStorage.getItem("tipo") == "1") {
+                    router.replace('/fabrica/inicio');
+                } else if (sessionStorage.getItem("tipo") == "2") {
+                    router.replace('/mayorista/mayorista-inicio');
+                }else{
                 }
             } catch (error) {
                 console.error(error)
@@ -59,15 +64,15 @@ const Pedidos = () => {
     // Calculate the range of items to display based on the current page
     let startIndex = (currentPage - 1) * itemsPerPage;
     let endIndex = startIndex + itemsPerPage;
-    const [currentItems, setCurrentItems] = useState(()=>{
+    const [currentItems, setCurrentItems] = useState(() => {
         return dt.slice(startIndex, endIndex);
 
     })
-    
+
     useEffect(() => {
         let startIndex = (currentPage - 1) * itemsPerPage;
         let endIndex = startIndex + itemsPerPage;
-        setCurrentItems(()=>{
+        setCurrentItems(() => {
             return dt.slice(startIndex, endIndex)
         })
     }, [dt, currentPage])
@@ -87,36 +92,37 @@ const Pedidos = () => {
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <div className={styles.inicio}>
-                <ColorIdentifier></ColorIdentifier>
-                <div className={styles.contenido}>
-                    <ArrowBack currentPage={currentPage} setCurrentPage={setCurrentPage}></ArrowBack>
-                    <ModalPopUp
-                        openPopUp={openPopUp}
-                        setOpenPopUp={setOpenPopUp}
-                    >
-                        <ModalPedido data={dataPresionada} tipo={true} presionado={presionado} setPresionado={setPresionado}></ModalPedido>
-                    </ModalPopUp>
-                    <div className={styles.tarjetas}>
-                        {currentItems.map((item) => {
-                            if(dt.length>0){
-                                if (dt[dt.length-1]['id']==item.id){
-                                    return (<Pedido data={item} key={item.id} setOpenPopUp={setOpenPopUp} setDataPresionada={setDataPresionada} setColor={'rojo'} ></Pedido>)
+            <MiniDrawer>
+                <div className={styles.inicio}>
+                    <ColorIdentifier></ColorIdentifier>
+                    <div className={styles.contenido}>
+                        <ArrowBack currentPage={currentPage} setCurrentPage={setCurrentPage}></ArrowBack>
+                        <ModalPopUp
+                            openPopUp={openPopUp}
+                            setOpenPopUp={setOpenPopUp}
+                        >
+                            <ModalPedido data={dataPresionada} tipo={true} presionado={presionado} setPresionado={setPresionado}></ModalPedido>
+                        </ModalPopUp>
+                        <div className={styles.tarjetas}>
+                            {currentItems.map((item) => {
+                                if (dt.length > 0) {
+                                    if (dt[dt.length - 1]['id'] == item.id) {
+                                        return (<Pedido data={item} key={item.id} setOpenPopUp={setOpenPopUp} setDataPresionada={setDataPresionada} setColor={'rojo'} ></Pedido>)
+                                    }
+                                    else if (dt[0]['id'] == item.id) {
+                                        return (<Pedido data={item} key={item.id} setOpenPopUp={setOpenPopUp} setDataPresionada={setDataPresionada} setColor={'azul'} ></Pedido>)
+                                    }
+                                    else {
+                                        return (<Pedido data={item} key={item.id} setOpenPopUp={setOpenPopUp} setDataPresionada={setDataPresionada}></Pedido>)
+                                    }
                                 }
-                                else if(dt[0]['id']==item.id) {
-                                    return (<Pedido data={item} key={item.id} setOpenPopUp={setOpenPopUp} setDataPresionada={setDataPresionada} setColor={'azul'} ></Pedido>)
-                                }
-                                else {
-                                    return (<Pedido data={item} key={item.id} setOpenPopUp={setOpenPopUp} setDataPresionada={setDataPresionada}></Pedido>)
-                                }
-                            }
-                        })}
+                            })}
+                        </div>
+                        <ArrowForward endIndex={endIndex} tamañoLista={dt.length} currentPage={currentPage} setCurrentPage={setCurrentPage}></ArrowForward>
                     </div>
-                    <ArrowForward endIndex={endIndex} tamañoLista={dt.length} currentPage={currentPage} setCurrentPage={setCurrentPage}></ArrowForward>
                 </div>
-            </div>
+            </MiniDrawer>
         </>
     )
 }
-
 export default Pedidos

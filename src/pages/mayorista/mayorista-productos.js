@@ -1,33 +1,38 @@
 import { Inter } from "next/font/google";
 import Head from "next/head";
-import styles from "../styles/VistaProductos.module.css";
+import styles from "src/styles/VistaProductos.module.css";
+import HomeBar from "@/components/home_bar";
 import { useEffect, useState } from "react";
-import modificarDocumento from "./api/firebase/update-data";
-import obtener from "./api/firebase/get-data";
-import eliminarDocumento from "./api/firebase/delete-data";
+import modificarDocumento from "../api/firebase/update-data";
+import obtener from "../api/firebase/get-data";
+import eliminarDocumento from "../api/firebase/delete-data";
 import { ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
 const InterFont = Inter({ subsets: ["latin"] });
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { storage } from "../../firebase";
+import { storage } from "../../../firebase";
 import { v4 } from "uuid";
+import MiniDrawer from '../menuV2'
 
-const Productos = () => {
+const Home = () => {
     const router = useRouter()
     useEffect(() => {
         if (typeof window !== 'undefined') {
-          try {
-            if (sessionStorage.getItem("acceso") !== "true") {
-              router.push('/');
+            try {
+                if (sessionStorage.getItem("acceso") !== "true") {
+                    router.push('/');
+                }
+                if (sessionStorage.getItem("tipo") == "1") {
+                    router.replace('/fabrica/inicio');
+                } else if (sessionStorage.getItem("tipo") == "3") {
+                    router.replace('/minorista/minorista-inicio');
+                }else{
+                }
+            } catch (error) {
+                console.error(error)
             }
-            if (sessionStorage.getItem("tipo") !== "1") {
-              router.push('/');
-            }
-          } catch (error) {
-            router.push('/');
-          }
         }
-      }, [router]);
+    }, [])
     const [tabla, setTabla] = useState({
         tableContent: [],
     });
@@ -36,7 +41,7 @@ const Productos = () => {
 
     const fetchData = async () => {
         try {
-            const result = await obtener("productos");
+            const result = await obtener("productosMayorista");
             setMateriales(result);
             setTabla({
                 tableContent: result,
@@ -67,7 +72,7 @@ const Productos = () => {
         setTabla({
             tableContent: nuevaTab,
         });
-        modificarDocumento(itemId, "productos", {
+        modificarDocumento(itemId, "productosMayorista", {
             precio: tabla.tableContent[ref]["precio"]
         })
     };
@@ -85,7 +90,7 @@ const Productos = () => {
                     });
                 }
             }
-            await eliminarDocumento("productos", e.target.value)
+            await eliminarDocumento("productosMayorista", e.target.value)
             fetchData();
         }
     }
@@ -103,7 +108,7 @@ const Productos = () => {
         const refImagen = ref(storage, `/${file.name + v4()}`);
         uploadBytes(refImagen, file).then((snapshot) => {
             getDownloadURL(snapshot.ref).then((url) => {
-                modificarDocumento(itemId, "productos", {
+                modificarDocumento(itemId, "productosMayorista", {
                     imagen: url
                 })
                 for (var i = 0; i < tabla.tableContent.length; i++) {
@@ -120,59 +125,57 @@ const Productos = () => {
 
     return (
         <div className={InterFont.className}>
-            <Head>
-                <title>Crear Producto</title>
-            </Head>
-            <div class={styles.body}>
-                <div>
-                    <table class={styles.tabla}>
-                        <thead>
-                            <tr>
-                                <th class={styles.encabezado}>nombre</th>
-                                <th class={styles.encabezado}>precio</th>
-                                <th class={styles.encabezado}>imagen</th>
-                                <th class={styles.encabezado}>Eliminar Producto</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {tabla.tableContent.map((item) => (
-                                <tr key={item.id}>
-                                    <td class={styles.celda}>{item.nombre}</td>
-                                    <td class={styles.celda}>
-                                        <input class={styles.celdaEditable}
-                                            value={item.precio}
-                                            type="number"
-                                            onChange={(e) => cambioPrecio(e, item.id)}
-                                        >
-                                        </input>
-                                    </td>
-                                    <td class={styles.celda}>
-                                        <label for="imagen">
-                                            <div style={{ cursor: "pointer" }}>
-                                                <img
-                                                    src={item.imagen}
-                                                    height={70}
-                                                    alt="imagen"
-                                                    className={styles.imagen}
-                                                ></img>
-                                            </div>
-                                        </label>
-                                        <input
-                                            id="imagen"
-                                            accept="image/png, image/jpeg"
-                                            type="file"
-                                            onChange={(e) => cambioImagen(e, item.imagen, item.id)}
-                                            hidden
-                                        />
+            <MiniDrawer>
+                <div class={styles.body}>
+                    <div>
+
+                        <table class={styles.tabla}>
+                            <thead>
+                                <tr>
+                                    <th class={styles.encabezado}>nombre</th>
+                                    <th class={styles.encabezado}>precio unidad</th>
+                                    <th class={styles.encabezado}>imagen</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {tabla.tableContent.map((item) => (
+                                    <tr key={item.id}>
+                                        <td class={styles.celda}>{item.nombre}</td>
+                                        <td class={styles.celda}>
+                                            <input class={styles.celdaEditable}
+                                                value={item.precio}
+                                                type="number"
+                                                onChange={(e) => cambioPrecio(e, item.id)}
+                                            >
+                                            </input>
+                                        </td>
+                                        <td class={styles.celda}>
+                                            <label for="imagen">
+                                                <div style={{ cursor: "pointer" }}>
+                                                    <img
+                                                        src={item.imagen}
+                                                        height={70}
+                                                        alt="imagen"
+                                                        className={styles.imagen}
+                                                    ></img>
+                                                </div>
+                                            </label>
+                                            <input
+                                                id="imagen"
+                                                accept="image/png, image/jpeg"
+                                                type="file"
+                                                onChange={(e) => cambioImagen(e, item.imagen, item.id)}
+                                                hidden
+                                            />
 
 
-                                        {/* <img
+                                            {/* <img
                                             src={item.imagen}
                                             height={75}
                                             alt="imagen"
                                         ></img> */}
 
-                                        {/* <label for="imagen" style={{ fontSize: "32px" }}>
+                                            {/* <label for="imagen" style={{ fontSize: "32px" }}>
                                             <div class={styles.agregarImagen} style={{ cursor: "pointer" }}>
                                                 <Image
                                                     src={preview}
@@ -193,25 +196,15 @@ const Productos = () => {
                                         /> */}
 
 
-                                    </td>
-                                    <td class={styles.celda}>
-                                        <button
-                                            class={styles.boton}
-                                            type="button"
-                                            value={item.id}
-                                            onClick={(e) => eliminarProducto(e, item.nombre)}
-                                        >
-                                            -
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            </div>
+            </MiniDrawer>
         </div>
     );
 }
-
-export default Productos
+export default Home;
