@@ -26,7 +26,7 @@ const Home = () => {
                     router.replace('/fabrica/inicio');
                 } else if (sessionStorage.getItem("tipo") == "3") {
                     router.replace('/minorista/minorista-inicio');
-                }else{
+                } else {
                 }
             } catch (error) {
                 console.error(error)
@@ -134,6 +134,7 @@ const Home = () => {
                                 <tr>
                                     <th class={styles.encabezado}>nombre</th>
                                     <th class={styles.encabezado}>precio unidad</th>
+                                    <th class={styles.encabezado}>Existencias</th>
                                     <th class={styles.encabezado}>imagen</th>
                                 </tr>
                             </thead>
@@ -148,6 +149,9 @@ const Home = () => {
                                                 onChange={(e) => cambioPrecio(e, item.id)}
                                             >
                                             </input>
+                                        </td>
+                                        <td class={styles.celda}>
+                                            {item.existencia}
                                         </td>
                                         <td class={styles.celda}>
                                             <label for="imagen">

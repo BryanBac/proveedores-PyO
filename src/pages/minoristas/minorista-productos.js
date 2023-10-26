@@ -129,11 +129,12 @@ const Home = () => {
                 <div class={styles.body}>
                     <div>
 
-                        <table class={styles.tabla}>
+                    <table class={styles.tabla}>
                             <thead>
                                 <tr>
                                     <th class={styles.encabezado}>nombre</th>
                                     <th class={styles.encabezado}>precio unidad</th>
+                                    <th class={styles.encabezado}>Existencias</th>
                                     <th class={styles.encabezado}>imagen</th>
                                 </tr>
                             </thead>
@@ -148,6 +149,9 @@ const Home = () => {
                                                 onChange={(e) => cambioPrecio(e, item.id)}
                                             >
                                             </input>
+                                        </td>
+                                        <td class={styles.celda}>
+                                            {item.existencia}
                                         </td>
                                         <td class={styles.celda}>
                                             <label for="imagen">
