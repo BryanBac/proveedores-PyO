@@ -1,5 +1,7 @@
 import enviar from "@/pages/api/firebase/post-data";
 import eliminarDocumento from "@/pages/api/firebase/delete-data";
+import modificarDocumento from "@/pages/api/firebase/update-data";
+import obtener from "@/pages/api/firebase/get-data";
 import PlatilloConfirmar from "../platilloConfirmar";
 import styles from '@/styles/ModalPedido.module.css'
 import { useEffect, useState } from "react";
@@ -17,6 +19,70 @@ export default function ModalPedido(props) {
         matActualizar: data.matActualizar,
         mayorista: data.mayorista
     })
+
+    const reducirInventario = async (productos) => {
+        let nuevaExistencia = 0
+        let mensaje = ''
+        let permitido = true
+        let inventario = await obtener('productosFabrica')
+        let productoInventario
+
+        // Verifica que se cuente con el inventario suficiente para completar el pedido
+        productos.map((producto) => {
+            for (let i = 0; i < inventario.length; i++) {
+                // Busca el producto en inventario
+                if (producto.id === inventario[i].id) {
+                    productoInventario = inventario[i]
+                }
+            }
+            if (productoInventario.existencia < producto.cantidadLocal) {
+                mensaje = mensaje + '\n' + producto.nombre
+                permitido = false
+            }
+        })
+
+        if (permitido) {
+            // Si se permite, se actualizan los productos en inventario
+            enviar("completadosFabrica", newData)
+            eliminarDocumento("pedidosFabrica", data.id)
+            productos.map((producto) => {
+                for (let i = 0; i < inventario.length; i++) {
+                    if (producto.id === inventario[i].id) {
+                        productoInventario = inventario[i]
+                    }
+                }
+                nuevaExistencia = productoInventario.existencia - producto.cantidadLocal
+                modificarDocumento(producto.id, 'productosFabrica', {
+                    existencia: nuevaExistencia
+                })
+            })
+        }
+        else {
+            alert('No se cuentan con productos suficientes para completar el pedido' + mensaje)
+        }
+    }
+
+    const ingresarInventario = async (productos) => {
+        let nuevaExistencia = 0
+        let mensaje = ''
+        let permitido = true
+        let inventario = await obtener('productosFabrica')
+        let productoInventario
+
+        enviar("pedidosFabrica", newData)
+        eliminarDocumento("completadosFabrica", data.id)
+        productos.map((producto) => {
+            for (let i = 0; i < inventario.length; i++) {
+                if (producto.id === inventario[i].id) {
+                    productoInventario = inventario[i]
+                }
+            }
+            nuevaExistencia = productoInventario.existencia + producto.cantidadLocal
+            modificarDocumento(producto.id, 'productosFabrica', {
+                existencia: nuevaExistencia
+            })
+        })
+    }
 
     return (
         <div>
@@ -44,11 +110,9 @@ export default function ModalPedido(props) {
                     type=""
                     onClick={() => {
                         if (tipo) {
-                            enviar("completadosFabrica", newData)
-                            eliminarDocumento("pedidosFabrica", data.id)
+                            reducirInventario(newData.pedido)
                         } else {
-                            enviar("pedidosFabrica", newData)
-                            eliminarDocumento("completadosFabrica", data.id)
+                            ingresarInventario(newData.pedido)
                         }
                         setPresionado(!presionado)
                         setOpenPopUp(false);
